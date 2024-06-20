@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { LightDarkToggle } from "@/components/ui/light-dark-toggle";
 
-
 export const Header = () => {
     const router = useRouter();
 
@@ -14,7 +13,7 @@ export const Header = () => {
     };
 
     return (
-        <header className="bg-[url('/audience.jpg')] bg-cover bg-center text-white p-4 sticky top-0 z-50 shadow-md flex flex-col sm:flex-row justify-between items-center text-center sm:text-left">
+        <header className="bg-[url('/audience.webp')] bg-cover bg-center text-white p-4 sticky top-0 z-50 shadow-md flex flex-col sm:flex-row justify-between items-center text-center sm:text-left">
             <div className="flex flex-col sm:flex-row items-center gap-2 cursor-pointer" onClick={handleHomeClick}>
                 <div className="flex items-center gap-2">
                     <MonitorPlayIcon size={40} className="sm:size-50" />
