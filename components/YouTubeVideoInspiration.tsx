@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
-import YouTubePlainPlayer, { YouTubePlainPlayerRef } from './YouTubePlainPlayer';
+import React, { useEffect } from 'react';
+import YouTubeLazyPlayer from '@/components/YouTubeLazyPlayer'; // Import the lazy loading player
 import { useVideo } from '@/context/VideoContext';
 
 interface YouTubeVideoInspirationProps {
@@ -10,7 +10,6 @@ interface YouTubeVideoInspirationProps {
 
 const YouTubeVideoInspiration: React.FC<YouTubeVideoInspirationProps> = ({ selectedVideoId }) => {
     const { videoId, setVideoId } = useVideo();
-    const playerRef = useRef<YouTubePlainPlayerRef>(null);
 
     useEffect(() => {
         if (selectedVideoId) {
@@ -21,7 +20,7 @@ const YouTubeVideoInspiration: React.FC<YouTubeVideoInspirationProps> = ({ selec
     return (
         <div className="mt-4 order-2 md:order-none">
             {videoId ? (
-                <YouTubePlainPlayer ref={playerRef} videoId={videoId} />
+                <YouTubeLazyPlayer videoId={videoId} autoplay={true} />
             ) : (
                 <p>No video selected</p>
             )}

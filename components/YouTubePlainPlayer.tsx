@@ -18,55 +18,48 @@ export interface YouTubePlainPlayerRef {
 const YouTubePlainPlayer = forwardRef<YouTubePlainPlayerRef, YouTubePlainPlayerProps>((props, ref) => {
     const { videoId: contextVideoId } = useVideo();
     const [loading, setLoading] = useState<boolean>(true);
-    const [isReady, setIsReady] = useState<boolean>(false);
     const playerRef = useRef<YouTubePlayer | null>(null);
+    const videoId = props.videoId || contextVideoId;
 
     useImperativeHandle(ref, () => ({
         playVideo: () => {
-            if (playerRef.current) {
-                playerRef.current.playVideo();
-            }
+            playerRef.current?.playVideo();
         },
         pauseVideo: () => {
-            if (playerRef.current) {
-                playerRef.current.pauseVideo();
-            }
+            playerRef.current?.pauseVideo();
         },
     }));
-
-    const videoId = props.videoId || contextVideoId;
 
     const onReady: YouTubeProps['onReady'] = (event) => {
         playerRef.current = event.target;
         setLoading(false);
-        setIsReady(true);
+        event.target.playVideo();  // Ensure video plays as soon as it's ready
     };
-
-    useEffect(() => {
-        if (isReady && props.autoplay && playerRef.current) {
-            // Using a timeout to ensure the player is fully ready
-            setTimeout(() => {
-                playerRef.current?.playVideo();
-            }, 1000);
-        }
-    }, [isReady, props.autoplay]);
 
     const opts: YouTubeProps['opts'] = {
         height: '390',
         width: '640',
         playerVars: {
-            autoplay: 0,
+            autoplay: 1,  // Ensure autoplay is set
+            controls: 1,  // Show controls if needed
+            enablejsapi: 1,
+            modestbranding: 1
         },
     };
 
+    useEffect(() => {
+        setLoading(false);
+    }, [videoId]);
+
     return (
         <div className="relative">
-            {loading && (
+            {loading ? (
                 <div className="absolute inset-0 z-10 flex items-center justify-center bg-white bg-opacity-50">
-                    <Spinner loading={loading} />
+                    <Spinner loading={true} />
                 </div>
+            ) : (
+                <YouTube videoId={videoId} opts={opts} onReady={onReady} />
             )}
-            <YouTube videoId={videoId} opts={opts} onReady={onReady} />
         </div>
     );
 });
