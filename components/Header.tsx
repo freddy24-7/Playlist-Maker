@@ -15,7 +15,7 @@ export const Header = () => {
 
     return (
         <header
-            className="relative bg-cover bg-center text-white p-4 sticky top-0 z-50 shadow-md flex flex-col sm:flex-row justify-between items-center text-center sm:text-left">
+            className="bg-cover bg-center text-white p-4 sticky top-0 z-50 shadow-md flex flex-col sm:flex-row justify-between items-center text-center sm:text-left">
             <div className="absolute inset-0 z-[-1]">
                 <Image
                     src="/audience.webp"
@@ -29,9 +29,9 @@ export const Header = () => {
             <div className="flex flex-col sm:flex-row items-center gap-2 cursor-pointer" onClick={handleHomeClick}>
                 <div className="flex items-center gap-2">
                     <MonitorPlayIcon size={40} className="sm:size-50"/>
-                    <h1 className="text-lg sm:text-xl font-bold">Playlister</h1>
+                    <h1 className="text-lg sm:text-xl font-bold">Play-lister</h1>
                 </div>
-                <h3 className="text-sm sm:text-base">Create your own playlist</h3>
+                <h2 className="text-sm sm:text-base">Create your own playlist</h2>
             </div>
             <Button
                 onClick={handleHomeClick}
