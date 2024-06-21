@@ -19,9 +19,10 @@ const YouTubeLazyPlayer: React.FC<YouTubeLazyPlayerProps> = ({ videoId, autoplay
     };
 
     const opts: YouTubeProps['opts'] = {
-        width: '100%', // Default width to 100% to fill container
+        height: '390',
+        width: '640',
         playerVars: {
-            autoplay: autoplay ? 1 : 0,  // Convert boolean to 0 or 1 for YouTube API
+            autoplay: 1,  // This ensures video plays immediately when loaded
             controls: 1,
             enablejsapi: 1,
             modestbranding: 1
@@ -44,9 +45,7 @@ const YouTubeLazyPlayer: React.FC<YouTubeLazyPlayerProps> = ({ videoId, autoplay
                     <button className="play-button">Play</button>
                 </div>
             ) : (
-                <div className="aspect-w-16 aspect-h-9"> {/* Maintain aspect ratio 16:9 */}
-                    <YouTube videoId={videoId} opts={opts} onReady={onPlayerReady} className="absolute top-0 left-0 w-full h-full" />
-                </div>
+                <YouTube videoId={videoId} opts={opts} onReady={onPlayerReady} />
             )}
         </div>
     );
