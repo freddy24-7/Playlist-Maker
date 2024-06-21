@@ -1,5 +1,3 @@
-'use client';
-
 import React, { forwardRef, useImperativeHandle, useRef, useEffect, useState } from 'react';
 import YouTube, { YouTubeProps, YouTubePlayer } from 'react-youtube';
 import { useVideo } from '@/context/VideoContext';
@@ -37,8 +35,7 @@ const YouTubePlainPlayer = forwardRef<YouTubePlainPlayerRef, YouTubePlainPlayerP
     };
 
     const opts: YouTubeProps['opts'] = {
-        height: '390',
-        width: '640',
+        width: '100%', // Default width to 100% to fill container
         playerVars: {
             autoplay: 1,  // Ensure autoplay is set
             controls: 1,  // Show controls if needed
@@ -58,7 +55,9 @@ const YouTubePlainPlayer = forwardRef<YouTubePlainPlayerRef, YouTubePlainPlayerP
                     <Spinner loading={true} />
                 </div>
             ) : (
-                <YouTube videoId={videoId} opts={opts} onReady={onReady} />
+                <div className="aspect-w-16 aspect-h-9"> {/* Maintain aspect ratio 16:9 */}
+                    <YouTube videoId={videoId} opts={opts} onReady={onReady} className="absolute top-0 left-0 w-full h-full" />
+                </div>
             )}
         </div>
     );
