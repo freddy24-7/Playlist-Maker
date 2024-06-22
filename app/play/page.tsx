@@ -1,8 +1,10 @@
+// app/play/page.tsx
 'use client';
 
 import React from 'react';
 import { useSearchParams } from 'next/navigation';
 import YouTubeContainer from '@/components/YouTubeContainer';
+import SuspenseWrapper from '@/components/SuspenseWrapper';
 
 const PlayPage: React.FC = () => {
     const searchParams = useSearchParams();
@@ -22,4 +24,12 @@ const PlayPage: React.FC = () => {
     );
 };
 
-export default PlayPage;
+const PlayPageWrapper: React.FC = () => {
+    return (
+        <SuspenseWrapper>
+            <PlayPage />
+        </SuspenseWrapper>
+    );
+};
+
+export default PlayPageWrapper;
