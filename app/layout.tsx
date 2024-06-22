@@ -4,7 +4,6 @@ import { Poppins } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { VideoProvider } from "@/context/VideoContext"; // Import VideoProvider
 import Head from 'next/head';
 import "./globals.css";
 
@@ -30,13 +29,11 @@ export default function RootLayout({ children }: Props) {
             <link rel="preload" href="/audience.webp" as="image" />
         </Head>
         <body className={cn(poppins.className, "dark")}>
-        <VideoProvider> {/* Wrap the content inside VideoProvider */}
-            <Header />
-            <div className="flex flex-col gap-4 min-h-screen p-4 md:p-8 lg:p-12">
-                {children}
-            </div>
-            <Footer />
-        </VideoProvider>
+        <Header />
+        <div className="flex flex-col gap-4 min-h-screen p-4 sm:p-6 md:p-8 lg:p-12">
+            {children}
+        </div>
+        <Footer />
         </body>
         </html>
     );

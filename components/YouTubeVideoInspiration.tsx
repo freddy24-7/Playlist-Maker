@@ -2,14 +2,13 @@
 
 import React, { useEffect, useRef } from 'react';
 import YouTubePlainPlayer, { YouTubePlainPlayerRef } from './YouTubePlainPlayer';
-import { useVideo } from '@/context/VideoContext';
 
 interface YouTubeVideoInspirationProps {
     selectedVideoId: string;
 }
 
 const YouTubeVideoInspiration: React.FC<YouTubeVideoInspirationProps> = ({ selectedVideoId }) => {
-    const { videoId, setVideoId } = useVideo();
+    const [videoId, setVideoId] = React.useState<string>('');
     const playerRef = useRef<YouTubePlainPlayerRef>(null);
 
     useEffect(() => {
