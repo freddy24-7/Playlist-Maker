@@ -1,10 +1,10 @@
-'use client'
+'use client';
 
 import Image from 'next/image';
-import { MonitorPlayIcon, HomeIcon } from "lucide-react";
+import { MonitorPlayIcon, HomeIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { LightDarkToggle } from "@/components/ui/light-dark-toggle";
+import { LightDarkToggle } from '@/components/ui/light-dark-toggle';
 
 export const Header = () => {
     const router = useRouter();
@@ -18,8 +18,8 @@ export const Header = () => {
             <div className="absolute inset-0 z-[-1]">
                 <Image
                     src="/audience.webp"
-                    layout="fill"
-                    objectFit="cover"
+                    fill
+                    style={{ objectFit: 'cover' }}
                     quality={75}
                     alt="Audience Background"
                     priority
@@ -27,7 +27,7 @@ export const Header = () => {
             </div>
             <div className="flex flex-col sm:flex-row items-center gap-2 cursor-pointer" onClick={handleHomeClick}>
                 <div className="flex items-center gap-2">
-                    <MonitorPlayIcon size={40} className="sm:size-50"/>
+                    <MonitorPlayIcon size={40} className="sm:size-50" />
                     <h1 className="text-lg sm:text-xl md:text-2xl font-bold">Play-lister</h1>
                 </div>
                 <h2 className="text-sm sm:text-base md:text-lg">Create your own playlist</h2>
@@ -38,10 +38,10 @@ export const Header = () => {
                 aria-label="Home"
                 role="button"
             >
-                <HomeIcon size={24} className="sm:size-50" aria-hidden="true"/>
+                <HomeIcon size={24} className="sm:size-50" aria-hidden="true" />
                 <span className="sr-only">Home</span>
             </Button>
-            <LightDarkToggle className="fixed top-2 right-2"/>
+            <LightDarkToggle className="fixed top-2 right-2" />
         </header>
     );
 };

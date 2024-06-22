@@ -13,7 +13,21 @@ const nextConfig = {
                 pathname: '**',
             },
         ],
-    }
+    },
+    async headers() {
+        return [
+            {
+                // Match all image files
+                source: '/:all*(jpg|jpeg|gif|png|svg|webp|avif)',
+                headers: [
+                    {
+                        key: 'Cache-Control',
+                        value: 'public, max-age=31536000, immutable',
+                    },
+                ],
+            },
+        ];
+    },
 };
 
 export default nextConfig;
