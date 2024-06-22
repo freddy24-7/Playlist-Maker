@@ -1,7 +1,6 @@
 'use client';
-
 import React from 'react';
-import YouTubePlainPlayerFacade from './YouTubePlainPlayerFacade';
+import YouTubePlainPlayerFacade from '@/components/YouTubePlainPlayerFacade';
 
 interface YouTubeContainerProps {
     videoId?: string;

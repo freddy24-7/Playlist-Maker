@@ -1,7 +1,6 @@
 'use client';
-
 import React, { forwardRef, useImperativeHandle, useRef, useState, lazy, Suspense } from 'react';
-import Spinner from './Spinner';
+import Spinner from '@/components/Spinner';
 import YouTubePlaceholder from './YouTubePlaceholder';
 
 const LazyYouTubePlainPlayer = lazy(() => import('./YouTubePlainPlayer'));

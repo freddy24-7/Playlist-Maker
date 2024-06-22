@@ -1,8 +1,7 @@
 'use client';
-
 import React, { forwardRef, useImperativeHandle, useRef, useEffect, useState } from 'react';
 import YouTube, { YouTubeProps, YouTubePlayer } from 'react-youtube';
-import Spinner from './Spinner';
+import Spinner from '@/components/Spinner';
 
 interface YouTubePlainPlayerProps {
     videoId?: string;

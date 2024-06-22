@@ -15,7 +15,7 @@ export const Header = () => {
 
     return (
         <header className="bg-cover bg-center text-white p-4 sm:p-6 md:p-8 sticky top-0 z-50 shadow-md flex flex-col sm:flex-row justify-between items-center text-center sm:text-left">
-            <div className="absolute inset-0 z-[-1]">
+            <div className="absolute inset-0 z-[-1] w-full h-full">
                 <CldImage
                     src="playlistapp/audience_tu" // Replace with your Cloudinary public ID
                     fill
@@ -41,7 +41,7 @@ export const Header = () => {
                 <HomeIcon size={20} className="sm:size-50 mr-3" aria-hidden="true" />
                 <span className="sr-only">Home</span>
             </Button>
-            <LightDarkToggle className="fixed top-6 right-2" />
+            <LightDarkToggle className="fixed top-6 right-2 sm:static" />
         </header>
     );
 };
