@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import YouTubePlainPlayer, { YouTubePlainPlayerRef } from '@/components/YouTubePlainPlayer';
+import { YouTubePlainPlayerRef } from '@/components/YouTubePlainPlayer';
+import YouTubePlainPlayerFacade from '@/components/YouTubePlainPlayerFacade';
 
 interface YouTubeVideoInspirationProps {
     selectedVideoId: string;
@@ -20,8 +21,8 @@ const YouTubeVideoInspiration: React.FC<YouTubeVideoInspirationProps> = ({ selec
     return (
         <div className="mt-4 order-2 md:order-none">
             {videoId ? (
-                <YouTubePlainPlayer ref={playerRef} videoId={videoId} />
-            ) : (
+                <YouTubePlainPlayerFacade ref={playerRef} videoId={videoId} autoplay={false}/>
+                ) : (
                 <p>No video selected</p>
             )}
         </div>
