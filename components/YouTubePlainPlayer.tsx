@@ -61,7 +61,9 @@ const YouTubePlainPlayer = forwardRef<YouTubePlainPlayerRef, YouTubePlainPlayerP
                     <Spinner loading={loading} />
                 </div>
             )}
-            <YouTube videoId={videoId} opts={opts} onReady={onReady} className="w-full h-full" />
+            <div className="youtube-container">
+                <YouTube videoId={videoId} opts={opts} onReady={onReady} className="youtube-player" />
+            </div>
         </div>
     );
 });
