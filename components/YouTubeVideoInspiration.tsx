@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import YouTubePlainPlayer, { YouTubePlainPlayerRef } from './YouTubePlainPlayer';
+import YouTubePlainPlayer, { YouTubePlainPlayerRef } from '@/components/YouTubePlainPlayer';
 
 interface YouTubeVideoInspirationProps {
     selectedVideoId: string;
