@@ -1,8 +1,8 @@
-// YouTubePlainPlayerLazy.tsx
 'use client';
 
-import React, { forwardRef, useImperativeHandle, useRef, useEffect, useState, lazy, Suspense } from 'react';
+import React, { forwardRef, useImperativeHandle, useRef, useState, lazy, Suspense } from 'react';
 import Spinner from './Spinner';
+import YouTubePlaceholder from './YouTubePlaceholder';
 
 const LazyYouTubePlainPlayer = lazy(() => import('./YouTubePlainPlayer'));
 
@@ -18,7 +18,7 @@ export interface YouTubePlainPlayerRef {
 }
 
 const YouTubePlainPlayerFacade = forwardRef<YouTubePlainPlayerRef, YouTubePlainPlayerProps>((props, ref) => {
-    const [isMounted, setIsMounted] = useState(false);
+    const [isPlayerVisible, setIsPlayerVisible] = useState(false);
     const playerRef = useRef<YouTubePlainPlayerRef>(null);
 
     useImperativeHandle(ref, () => ({
@@ -34,13 +34,13 @@ const YouTubePlainPlayerFacade = forwardRef<YouTubePlainPlayerRef, YouTubePlainP
         },
     }));
 
-    useEffect(() => {
-        setIsMounted(true);
-    }, []);
+    const handlePlaceholderClick = () => {
+        setIsPlayerVisible(true);
+    };
 
     return (
         <div className={`relative ${props.className}`}>
-            {isMounted ? (
+            {isPlayerVisible ? (
                 <Suspense
                     fallback={
                         <div className="absolute inset-0 z-10 flex items-center justify-center bg-white bg-opacity-50">
@@ -51,9 +51,11 @@ const YouTubePlainPlayerFacade = forwardRef<YouTubePlainPlayerRef, YouTubePlainP
                     <LazyYouTubePlainPlayer ref={playerRef} {...props} />
                 </Suspense>
             ) : (
-                <div className="absolute inset-0 z-10 flex items-center justify-center bg-white bg-opacity-50">
-                    <Spinner loading={true} />
-                </div>
+                <YouTubePlaceholder
+                    onClick={handlePlaceholderClick}
+                    thumbnailUrl={`https://img.youtube.com/vi/${props.videoId}/hqdefault.jpg`}
+                    className={props.className}
+                />
             )}
         </div>
     );
