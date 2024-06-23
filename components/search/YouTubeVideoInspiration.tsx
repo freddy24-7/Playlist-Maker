@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import YouTubeLazyPlayer from '@/components/YouTubeLazyPlayer'; // Import the lazy loading player
+import YouTubeLazyPlayer from '@/components/search/YouTubeLazyPlayer'; // Import the lazy loading player
 import { useVideo } from '@/context/VideoContext';
 
 interface YouTubeVideoInspirationProps {

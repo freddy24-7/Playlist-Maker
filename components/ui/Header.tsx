@@ -5,6 +5,7 @@ import { MonitorPlayIcon, HomeIcon } from "lucide-react";
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { LightDarkToggle } from "@/components/ui/light-dark-toggle";
+import { CldImage } from 'next-cloudinary';
 
 export const Header = () => {
     const router = useRouter();
@@ -16,11 +17,11 @@ export const Header = () => {
     return (
         <header className="bg-cover bg-center text-white p-4 sticky top-0 z-50 shadow-md flex flex-col sm:flex-row justify-between items-center text-center sm:text-left">
             <div className="absolute inset-0 z-[-1]">
-                <Image
-                    src="/audience.webp"
-                    layout="fill"
-                    objectFit="cover"
-                    quality={75}
+                <CldImage
+                    src="playlistapp/audience_tu"
+                    fill
+                    style={{objectFit: 'cover'}}
+                    quality={40}
                     alt="Audience Background"
                     priority
                 />

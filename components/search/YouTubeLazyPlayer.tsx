@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import YouTube, { YouTubeProps } from 'react-youtube';
-import Spinner from './Spinner';
+import Spinner from '../ui/Spinner';
 import Image from 'next/image'
 
 

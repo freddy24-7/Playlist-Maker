@@ -2,8 +2,8 @@ import React from 'react';
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import { cn } from "@/lib/utils";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
+import { Header } from "@/components/ui/Header";
+import { Footer } from "@/components/ui/Footer";
 import { VideoProvider } from "@/context/VideoContext"; // Import VideoProvider
 import Head from 'next/head';
 import "./globals.css";

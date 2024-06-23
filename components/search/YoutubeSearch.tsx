@@ -2,9 +2,9 @@
 
 import React, { Suspense, useState } from 'react';
 import axios from 'axios';
-import Spinner from './Spinner';
+import Spinner from '../ui/Spinner';
 
-const YouTubeVideoList = React.lazy(() => import('./YouTubeVideoList'));
+const YouTubeVideoList = React.lazy(() => import('../YouTubeVideoList'));
 const YouTubeSearchForm = React.lazy(() => import('./YouTubeSearchForm'));
 const YouTubeVideoInspiration = React.lazy(() => import('./YouTubeVideoInspiration'));
 

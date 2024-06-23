@@ -26,7 +26,7 @@ const YouTubeSearchForm: React.FC<YouTubeSearchFormProps> = ({ searchTerm, setSe
                 />
                 <Button
                     type="submit"
-                    className="ml-3.5"
+                    className="ml-1.5"
                 >
                     Search
                 </Button>

@@ -1,6 +1,6 @@
 import React from 'react';
 import YouTube, { YouTubeProps } from 'react-youtube';
-import Spinner from './Spinner';
+import Spinner from './ui/Spinner';
 
 interface YouTubeContainerProps {
     videoId: string;

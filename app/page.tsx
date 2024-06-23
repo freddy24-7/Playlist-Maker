@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-const YoutubeSearch = React.lazy(() => import('@/components/YoutubeSearch'));
+const YoutubeSearch = React.lazy(() => import('@/components/search/YoutubeSearch'));
 
 const SearchYouTubePage: React.FC = () => {
     return (
