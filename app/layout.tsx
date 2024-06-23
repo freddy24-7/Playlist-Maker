@@ -27,7 +27,7 @@ export default function RootLayout({ children }: Props) {
     return (
         <html lang="en">
         <Head>
-            <link rel="preload" href="/audience.webp" as="image" />
+            <link rel="preload" as="image" />
         </Head>
         <body className={cn(poppins.className, "dark")}>
         <VideoProvider> {/* Wrap the content inside VideoProvider */}

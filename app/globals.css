@@ -122,10 +122,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: cornflowerblue;
     border: none;
     color: white;
-    font-size: 2rem;
     cursor: pointer;
     border-radius: 10px;
 }

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import YouTube, { YouTubeProps } from 'react-youtube';
 import Spinner from '../ui/Spinner';
 import Image from 'next/image'
-
+import { Button } from '@/components/ui/button';
 
 interface YouTubeLazyPlayerProps {
     videoId: string;
@@ -47,7 +47,7 @@ const YouTubeLazyPlayer: React.FC<YouTubeLazyPlayerProps> = ({ videoId, autoplay
                         width={500}
                         height={500}
                     />
-                    <button className="play-button">Play</button>
+                    <Button className="play-button">Play</Button>
                 </div>
             ) : (
                 <div>
