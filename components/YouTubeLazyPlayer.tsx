@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import YouTube, { YouTubeProps } from 'react-youtube';
 import Spinner from './Spinner';
+import Image from 'next/image'
+
 
 interface YouTubeLazyPlayerProps {
     videoId: string;
@@ -19,8 +21,6 @@ const YouTubeLazyPlayer: React.FC<YouTubeLazyPlayerProps> = ({ videoId, autoplay
     };
 
     const opts: YouTubeProps['opts'] = {
-        height: '390',
-        width: '640',
         playerVars: {
             autoplay: 1,  // This ensures video plays immediately when loaded
             controls: 1,
@@ -41,11 +41,16 @@ const YouTubeLazyPlayer: React.FC<YouTubeLazyPlayerProps> = ({ videoId, autoplay
             )}
             {!showPlayer ? (
                 <div className="video-facade" onClick={handlePlayClick}>
-                    <img src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`} alt="Video thumbnail" />
+                    <Image
+                        src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
+                        alt="Video thumbnail"
+                        width={500}
+                        height={500}
+                    />
                     <button className="play-button">Play</button>
                 </div>
             ) : (
-                <div >
+                <div>
                     <YouTube videoId={videoId} opts={opts} onReady={onPlayerReady} />
                 </div>
             )}

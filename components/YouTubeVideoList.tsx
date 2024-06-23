@@ -39,7 +39,7 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
     console.log(videos);
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-4 mb-4">
             {videos.map((video) => (
                 <Card key={video.id.videoId} className="cursor-pointer hover:shadow-lg transition-shadow">
                     <CardHeader>

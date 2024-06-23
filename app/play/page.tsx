@@ -10,7 +10,6 @@ const PlayPage: React.FC = () => {
 
     return (
         <div className="flex flex-col items-center justify-start min-h-screen pt-10 px-4 sm:px-6 lg:px-8 bg-background text-foreground">
-            <h1 className="text-2xl font-bold mb-4 text-primary-foreground">Enjoy...!</h1>
             <div className="w-full max-w-3xl bg-card text-card-foreground p-4 rounded-lg">
                 <YouTubePlainPlayer videoId={videoId} autoplay={true} />
             </div>

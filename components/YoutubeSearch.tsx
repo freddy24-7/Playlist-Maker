@@ -39,7 +39,7 @@ const YoutubeSearch: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col items-center w-full">
+        <div className="flex flex-col w-full">
             <Suspense fallback={<Spinner loading={true} />}>
                 <YouTubeSearchForm searchTerm={searchTerm} setSearchTerm={setSearchTerm} handleSearch={handleSearch} />
                 {!loading && !searchInitiated && (

@@ -16,7 +16,7 @@ const YouTubeSearchForm: React.FC<YouTubeSearchFormProps> = ({ searchTerm, setSe
 
     return (
         <form onSubmit={handleSearch} className="flex flex-col space-y-4 w-full max-w-md">
-            <div className="flex">
+            <div className="flex mb-4">
                 <input
                     type="text"
                     value={searchTerm}
