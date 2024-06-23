@@ -1,10 +1,12 @@
 'use client';
+
 import React, { Suspense, useState } from 'react';
 import axios from 'axios';
-import Spinner from '@/components/Spinner';
-import YouTubeVideoList from './YouTubeVideoList';
-import YouTubeSearchForm from './YouTubeSearchForm';
-import YouTubeVideoInspiration from './YouTubeVideoInspiration';
+import Spinner from '../ui/Spinner';
+
+const YouTubeVideoList = React.lazy(() => import('../YouTubeVideoList'));
+const YouTubeSearchForm = React.lazy(() => import('./YouTubeSearchForm'));
+const YouTubeVideoInspiration = React.lazy(() => import('./YouTubeVideoInspiration'));
 
 const YoutubeSearch: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState<string>('');
@@ -37,7 +39,7 @@ const YoutubeSearch: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col items-center w-full">
+        <div className="flex flex-col w-full">
             <Suspense fallback={<Spinner loading={true} />}>
                 <YouTubeSearchForm searchTerm={searchTerm} setSearchTerm={setSearchTerm} handleSearch={handleSearch} />
                 {!loading && !searchInitiated && (
