@@ -33,7 +33,7 @@ export const Header = () => {
     };
 
     return (
-        <header className="bg-cover bg-center text-white p-4 sticky top-0 z-50 shadow-md flex flex-col sm:flex-row justify-between items-center text-center sm:text-left">
+        <header className="bg-primary text-white p-4 sticky top-0 z-50 shadow-md flex flex-col sm:flex-row justify-between items-center text-center sm:text-left">
             {isDesktopOrLaptop && (
                 <div className="absolute inset-0 z-[-1]">
                     <CldImage
