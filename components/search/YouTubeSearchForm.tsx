@@ -21,7 +21,7 @@ const YouTubeSearchForm: React.FC<YouTubeSearchFormProps> = ({ searchTerm, setSe
                     value={searchTerm}
                     onChange={handleInputChange}
                     placeholder="Search Artist/Song..."
-                    className="flex-grow p-4 text-lg border-2 border-blue-500 rounded-l-lg focus:outline-none focus:border-blue-700"
+                    className="flex-grow p-4 text-lg border-2 border-blue-500 rounded-l-lg focus:outline-none focus:border-blue-700 text-black"
                 />
                 <Button
                     type="submit"
