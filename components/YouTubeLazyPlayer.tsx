@@ -19,10 +19,8 @@ const YouTubeLazyPlayer: React.FC<YouTubeLazyPlayerProps> = ({ videoId, autoplay
     };
 
     const opts: YouTubeProps['opts'] = {
-        height: '390',
-        width: '640',
         playerVars: {
-            autoplay: 1,  // This ensures video plays immediately when loaded
+            autoplay: autoplay ? 1 : 0,
             controls: 1,
             enablejsapi: 1,
             modestbranding: 1
@@ -40,13 +38,13 @@ const YouTubeLazyPlayer: React.FC<YouTubeLazyPlayerProps> = ({ videoId, autoplay
                 <Spinner loading={true} />
             )}
             {!showPlayer ? (
-                <div className="video-facade" onClick={handlePlayClick}>
+                <div className="video-facade cursor-pointer" onClick={handlePlayClick}>
                     <img src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`} alt="Video thumbnail" />
                     <button className="play-button">Play</button>
                 </div>
             ) : (
-                <div >
-                    <YouTube videoId={videoId} opts={opts} onReady={onPlayerReady} />
+                <div className="youtube-container">
+                    <YouTube videoId={videoId} opts={opts} onReady={onPlayerReady} className="youtube-player" />
                 </div>
             )}
         </div>
