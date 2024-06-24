@@ -1,55 +1,49 @@
 'use client';
 
-import React, { Suspense, useState } from 'react';
-import axios from 'axios';
+import React, { Suspense, useState, FormEvent, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Spinner from '../ui/Spinner';
 
 const YouTubeVideoList = React.lazy(() => import('../YouTubeVideoList'));
 const YouTubeSearchForm = React.lazy(() => import('./YouTubeSearchForm'));
 const YouTubeVideoInspiration = React.lazy(() => import('./YouTubeVideoInspiration'));
 
-const YoutubeSearch: React.FC = () => {
-    const [searchTerm, setSearchTerm] = useState<string>('');
-    const [loading, setLoading] = useState<boolean>(false);
-    const [searchResults, setSearchResults] = useState<any[]>([]);
-    const [selectedVideoId] = useState<string>('8N9PL3Iz3xc');
+interface YoutubeSearchProps {
+    searchResults: any[];
+    searchTerm: string;
+}
+
+const YoutubeSearch: React.FC<YoutubeSearchProps> = ({ searchResults, searchTerm }) => {
+    const router = useRouter();
+    const { query } = router;
+
+    const [currentSearchTerm, setCurrentSearchTerm] = useState<string>(searchTerm);
     const [searchInitiated, setSearchInitiated] = useState<boolean>(false);
 
-    const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSearch = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        if (!searchTerm) return;
-        setLoading(true);
+        if (!currentSearchTerm) return;
         setSearchInitiated(true);
-        try {
-            const response = await axios.get('https://www.googleapis.com/youtube/v3/search', {
-                params: {
-                    part: 'snippet',
-                    maxResults: 10,
-                    key: process.env.NEXT_PUBLIC_YOUTUBE_API_KEY,
-                    q: searchTerm,
-                    type: 'video',
-                },
-            });
-            setSearchResults(response.data.items);
-            setLoading(false);
-        } catch (error) {
-            console.error('Error fetching data: ', error);
-            setLoading(false);
-        }
     };
+
+    useEffect(() => {
+        if (query.searchInitiated === 'true') {
+            setSearchInitiated(true);
+        }
+    }, [query.searchInitiated]);
+
+    useEffect(() => {
+        console.log(searchInitiated);
+    }, [searchInitiated]);
 
     return (
         <div className="flex flex-col w-full">
             <Suspense fallback={<Spinner loading={true} />}>
-                <YouTubeSearchForm searchTerm={searchTerm} setSearchTerm={setSearchTerm} handleSearch={handleSearch} />
-                {!loading && !searchInitiated && (
-                    <YouTubeVideoInspiration selectedVideoId={selectedVideoId} />
+                <YouTubeSearchForm searchTerm={currentSearchTerm} setSearchTerm={setCurrentSearchTerm} handleSearch={handleSearch} />
+                {!searchInitiated && (
+                    <YouTubeVideoInspiration selectedVideoId="8N9PL3Iz3xc" />
                 )}
-                {loading ? (
-                    <Spinner loading={loading} />
-                ) : (
-                    <YouTubeVideoList videos={searchResults} />
-                )}
+                <YouTubeVideoList videos={searchResults} />
             </Suspense>
         </div>
     );
