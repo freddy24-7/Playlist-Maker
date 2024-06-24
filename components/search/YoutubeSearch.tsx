@@ -1,7 +1,7 @@
 'use client';
 
 import React, { Suspense, useState, FormEvent, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Spinner from '../ui/Spinner';
 
 const YouTubeVideoList = React.lazy(() => import('../YouTubeVideoList'));
@@ -15,7 +15,7 @@ interface YoutubeSearchProps {
 
 const YoutubeSearch: React.FC<YoutubeSearchProps> = ({ searchResults, searchTerm }) => {
     const router = useRouter();
-    const { query } = router;
+    const searchParams = useSearchParams();
 
     const [currentSearchTerm, setCurrentSearchTerm] = useState<string>(searchTerm);
     const [searchInitiated, setSearchInitiated] = useState<boolean>(false);
@@ -24,13 +24,14 @@ const YoutubeSearch: React.FC<YoutubeSearchProps> = ({ searchResults, searchTerm
         event.preventDefault();
         if (!currentSearchTerm) return;
         setSearchInitiated(true);
+        router.push(`?searchTerm=${currentSearchTerm}&searchInitiated=true`);
     };
 
     useEffect(() => {
-        if (query.searchInitiated === 'true') {
+        if (searchParams.get('searchInitiated') === 'true') {
             setSearchInitiated(true);
         }
-    }, [query.searchInitiated]);
+    }, [searchParams]);
 
     useEffect(() => {
         console.log(searchInitiated);
