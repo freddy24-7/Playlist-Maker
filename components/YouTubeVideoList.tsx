@@ -1,6 +1,4 @@
-'use client';
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useVideo } from '@/context/VideoContext';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -27,16 +25,49 @@ interface YouTubeVideoListProps {
 }
 
 const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
-    const { setVideoId } = useVideo();
+    const { setVideoId, registerVideoEndCallback } = useVideo();
     const router = useRouter();
+    const [songList, setSongList] = useState<Video[]>([]);  // Properly type the state
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    useEffect(() => {
+        const storedSongs = localStorage.getItem('songList');
+        if (storedSongs) {
+            setSongList(JSON.parse(storedSongs) as Video[]);  // Ensure proper type when parsing
+        }
+    }, []);
 
     const handleVideoSelect = (videoId: string) => {
         setVideoId(videoId);
         router.push('/play');
-        console.log(videoId);
     };
 
-    console.log(videos);
+    const handleAddToList = (video: Video) => {
+        const updatedList = [...songList, video];
+        setSongList(updatedList);
+        localStorage.setItem('songList', JSON.stringify(updatedList));
+        alert(`Item added, list now has ${updatedList.length} items`);
+    };
+
+    const handlePlayList = () => {
+        if (songList.length > 0 && !isPlaying) {
+            setIsPlaying(true);
+            setCurrentIndex(0);
+            setVideoId(songList[0].id.videoId);
+            router.push('/play');
+
+            registerVideoEndCallback(() => {
+                const nextIndex = currentIndex + 1;
+                if (nextIndex < songList.length) {
+                    setCurrentIndex(nextIndex);
+                    setVideoId(songList[nextIndex].id.videoId);
+                } else {
+                    setIsPlaying(false);
+                }
+            });
+        }
+    };
 
     return (
         <div className="space-y-4 mb-4">
@@ -54,9 +85,15 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
                         <CardTitle>{video.snippet.title}</CardTitle>
                         <CardDescription>{video.snippet.description || 'No description available.'}</CardDescription>
                     </CardContent>
-                    <CardFooter>
+                    <CardFooter className="flex space-x-2">
                         <Button type="button" onClick={() => handleVideoSelect(video.id.videoId)}>
                             Play
+                        </Button>
+                        <Button type="button" onClick={() => handleAddToList(video)}>
+                            Add to List
+                        </Button>
+                        <Button type="button" onClick={handlePlayList}>
+                            Play List
                         </Button>
                     </CardFooter>
                 </Card>

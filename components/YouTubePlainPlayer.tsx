@@ -1,3 +1,5 @@
+'use client'
+
 import React, { forwardRef, useImperativeHandle } from 'react';
 import useYouTubePlayer from '@/hooks/useYouTubePlayer';
 import YouTubeContainer from '@/components/YouTubeContainer';
@@ -6,6 +8,7 @@ import { useVideo } from '@/context/VideoContext';
 interface YouTubePlainPlayerProps {
     videoId?: string;
     autoplay?: boolean;
+    onVideoEnd?: () => void;
 }
 
 export interface YouTubePlainPlayerRef {

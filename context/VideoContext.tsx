@@ -1,16 +1,16 @@
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode, Dispatch, SetStateAction } from 'react';
+import React, { createContext, useContext, useState, ReactNode, Dispatch, SetStateAction, useCallback } from 'react';
 
-// Define the VideoContextProps interface within the same file
 interface VideoContextProps {
     videoId: string;
     setVideoId: Dispatch<SetStateAction<string>>;
     showAddVideo: boolean;
     setShowAddVideo: Dispatch<SetStateAction<boolean>>;
+    onVideoEnd: () => void; // Callback function to handle the end of a video
+    registerVideoEndCallback: (callback: () => void) => void; // Method to register the callback
 }
 
-// Create a context with an undefined initial value
 const VideoContext = createContext<VideoContextProps | undefined>(undefined);
 
 export const useVideo = (): VideoContextProps => {
@@ -28,12 +28,26 @@ interface VideoProviderProps {
 export const VideoProvider: React.FC<VideoProviderProps> = ({ children }) => {
     const [videoId, setVideoId] = useState<string>('');
     const [showAddVideo, setShowAddVideo] = useState<boolean>(false);
+    const [videoEndCallback, setVideoEndCallback] = useState<() => void>(() => {});
+
+    // Use a useCallback to memoize the callback function
+    const onVideoEnd = useCallback(() => {
+        if (videoEndCallback) {
+            videoEndCallback(); // Execute the registered callback when a video ends
+        }
+    }, [videoEndCallback]);
+
+    const registerVideoEndCallback = useCallback((callback: () => void) => {
+        setVideoEndCallback(() => callback); // Register the callback function
+    }, []);
 
     const value: VideoContextProps = {
         videoId,
         setVideoId,
         showAddVideo,
         setShowAddVideo,
+        onVideoEnd,
+        registerVideoEndCallback,
     };
 
     return (
