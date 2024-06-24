@@ -1,11 +1,11 @@
-import React, { forwardRef, useImperativeHandle } from 'react';
-import useYouTubePlayer from '@/hooks/useYouTubePlayer';
-import YouTubeContainer from '@/components/YouTubeContainer';
-import { useVideo } from '@/context/VideoContext';
+import React, { forwardRef, useImperativeHandle, useRef, useEffect, useState } from 'react';
+import { YouTubeProps, YouTubePlayer } from 'react-youtube';
+import YouTubeContainer from "@/components/YouTubeContainer";
 
 interface YouTubePlainPlayerProps {
     videoId?: string;
     autoplay?: boolean;
+    className?: string;
 }
 
 export interface YouTubePlainPlayerRef {
@@ -15,18 +15,44 @@ export interface YouTubePlainPlayerRef {
 
 // eslint-disable-next-line react/display-name
 const YouTubePlainPlayer = forwardRef<YouTubePlainPlayerRef, YouTubePlainPlayerProps>((props, ref) => {
-    const { videoId: contextVideoId } = useVideo();
-    const videoId = props.videoId || contextVideoId;
-    const { playerRef, loading, onReady, opts } = useYouTubePlayer({ videoId, autoplay: props.autoplay ?? false });
+    const { videoId, autoplay} = props;
+    const [loading, setLoading] = useState<boolean>(true);
+    const [isReady, setIsReady] = useState<boolean>(false);
+    const playerRef = useRef<YouTubePlayer | null>(null);
 
     useImperativeHandle(ref, () => ({
         playVideo: () => {
-            playerRef.current?.playVideo();
+            if (playerRef.current) {
+                playerRef.current.playVideo();
+            }
         },
         pauseVideo: () => {
-            playerRef.current?.pauseVideo();
+            if (playerRef.current) {
+                playerRef.current.pauseVideo();
+            }
         },
     }));
+
+    const onReady: YouTubeProps['onReady'] = (event) => {
+        playerRef.current = event.target;
+        setLoading(false);
+        setIsReady(true);
+    };
+
+    useEffect(() => {
+        if (isReady && autoplay && playerRef.current) {
+            // Using a timeout to ensure the player is fully ready
+            setTimeout(() => {
+                playerRef.current?.playVideo();
+            }, 1000);
+        }
+    }, [isReady, autoplay]);
+
+    const opts: YouTubeProps['opts'] = {
+        playerVars: {
+            autoplay: 0,
+        },
+    };
 
     return (
         <YouTubeContainer videoId={videoId} opts={opts} onReady={onReady} loading={loading} />

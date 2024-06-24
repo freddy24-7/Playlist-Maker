@@ -3,7 +3,7 @@ import YouTube, { YouTubeProps } from 'react-youtube';
 import Spinner from './ui/Spinner';
 
 interface YouTubeContainerProps {
-    videoId: string;
+    videoId?: string;
     opts: YouTubeProps['opts'];
     onReady: YouTubeProps['onReady'];
     loading: boolean;

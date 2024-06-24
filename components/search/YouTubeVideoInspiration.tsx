@@ -2,14 +2,13 @@
 
 import React, { useEffect } from 'react';
 import YouTubeLazyPlayer from '@/components/search/YouTubeLazyPlayer'; // Import the lazy loading player
-import { useVideo } from '@/context/VideoContext';
 
 interface YouTubeVideoInspirationProps {
     selectedVideoId: string;
 }
 
 const YouTubeVideoInspiration: React.FC<YouTubeVideoInspirationProps> = ({ selectedVideoId }) => {
-    const { videoId, setVideoId } = useVideo();
+    const [videoId, setVideoId] = React.useState<string>('');
 
     useEffect(() => {
         if (selectedVideoId) {

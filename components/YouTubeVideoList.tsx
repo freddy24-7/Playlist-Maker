@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { useVideo } from '@/context/VideoContext';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
@@ -27,12 +26,12 @@ interface YouTubeVideoListProps {
 }
 
 const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
-    const { setVideoId } = useVideo();
+    const [videoId, setVideoId] = React.useState<string>('');
     const router = useRouter();
 
     const handleVideoSelect = (videoId: string) => {
         setVideoId(videoId);
-        router.push('/play');
+        router.push(`/play?videoId=${videoId}`);
         console.log(videoId);
     };
 
