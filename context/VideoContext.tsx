@@ -1,6 +1,6 @@
-'use client';
+'use client'
 
-import React, { createContext, useContext, useState, ReactNode, Dispatch, SetStateAction, useCallback } from 'react';
+import React, { createContext, useContext, useState, ReactNode, Dispatch, SetStateAction, useCallback, useMemo } from 'react';
 
 interface VideoContextProps {
     videoId: string;
@@ -41,14 +41,15 @@ export const VideoProvider: React.FC<VideoProviderProps> = ({ children }) => {
         setVideoEndCallback(() => callback); // Register the callback function
     }, []);
 
-    const value: VideoContextProps = {
+    // Memoize the context value to prevent unnecessary re-renders
+    const value = useMemo(() => ({
         videoId,
         setVideoId,
         showAddVideo,
         setShowAddVideo,
         onVideoEnd,
         registerVideoEndCallback,
-    };
+    }), [videoId, showAddVideo, videoEndCallback]);
 
     return (
         <VideoContext.Provider value={value}>
@@ -56,3 +57,5 @@ export const VideoProvider: React.FC<VideoProviderProps> = ({ children }) => {
         </VideoContext.Provider>
     );
 };
+
+export default VideoProvider;
