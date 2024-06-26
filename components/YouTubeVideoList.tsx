@@ -1,10 +1,9 @@
-'use client';
-
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import YouTubePlainPlayer from '@/components/YouTubePlainPlayer';
+import { useRouter } from 'next/navigation';
 
 interface Video {
     id: {
@@ -30,7 +29,8 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
     const [songList, setSongList] = useState<Video[]>([]);
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [displayList, setDisplayList] = useState(true);  // State to control display of the list
+    const [displayList, setDisplayList] = useState(true);
+    const router = useRouter()
 
     useEffect(() => {
         const storedSongs = localStorage.getItem('songList');
@@ -41,7 +41,9 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
 
     const handleVideoSelect = (videoId: string) => {
         setVideoId(videoId);
-        setDisplayList(false);  // Hide the list when playing a video
+        setDisplayList(false);
+        router.push(`/play/${videoId}`);
+        // Push a new route with 'play' at the start
     };
 
     const handleAddToList = (video: Video) => {
@@ -55,7 +57,9 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
         if (songList.length > 0 && !isPlaying) {
             setIsPlaying(true);
             playVideoAtIndex(0);
-            setDisplayList(false);  // Hide the list when playing the playlist
+            setDisplayList(false);
+            // Optionally push a new route for playing the list
+            router.push(`/play/${songList[0].id.videoId}`);
         }
     };
 
@@ -69,6 +73,8 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
         setCurrentIndex(index);
         const videoId = songList[index].id.videoId;
         setVideoId(videoId);
+        // This could also navigate to a specific route each time a new video starts
+        router.push(`/play/${videoId}`);
     };
 
     const onVideoEnd = () => {

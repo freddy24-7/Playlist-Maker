@@ -26,7 +26,7 @@ const ClientPlayPage: React.FC = () => {
     const [autoplay, setAutoplay] = useState(false);
 
     useEffect(() => {
-        const videoId = router.query.videoId as string; // Ensure videoId is treated as a string
+        const videoId = router.query.videoId;
         const playlist = localStorage.getItem('songList');
 
         if (playlist) {

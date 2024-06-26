@@ -24,7 +24,7 @@ const YoutubeSearch: React.FC<YoutubeSearchProps> = ({ searchResults, searchTerm
         event.preventDefault();
         if (!currentSearchTerm) return;
         setSearchInitiated(true);
-        router.push(`?searchTerm=${currentSearchTerm}&searchInitiated=true`);
+        router.push(`/?searchTerm=${currentSearchTerm}&searchInitiated=true`);
     };
 
     useEffect(() => {
