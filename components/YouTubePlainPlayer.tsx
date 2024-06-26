@@ -1,5 +1,6 @@
-import React, { forwardRef, useImperativeHandle, useRef, useState, useEffect } from 'react';
+import React, { forwardRef, useImperativeHandle, useRef, useState, useEffect, useContext } from 'react';
 import YouTube, { YouTubePlayer, YouTubeProps } from 'react-youtube';
+import { usePlayback } from "@/contexts/PlaybackContext"; // Ensure the path to your context is correct
 
 interface YouTubePlainPlayerProps {
     videoId?: string;
@@ -16,21 +17,43 @@ export interface YouTubePlainPlayerRef {
 // eslint-disable-next-line react/display-name
 const YouTubePlainPlayer = forwardRef<YouTubePlainPlayerRef, YouTubePlainPlayerProps>((props, ref) => {
     const { videoId, autoplay, onVideoEnd } = props;
+    const { isPlaying } = usePlayback();  // Assuming usePlayback provides 'isPlaying' state
     const playerRef = useRef<YouTubePlayer | null>(null);
     const [isReady, setIsReady] = useState(false);
+    const { startPlaying, stopPlaying } = usePlayback();
 
     useEffect(() => {
+        if (videoId) {
+            startPlaying();
+        }
+    }, [videoId]);
+
+    useEffect(() => {
+        console.log("YouTube Player Ready State:", isReady);
+        console.log("YouTube Player Instance:", playerRef.current);
+
         if (isReady && playerRef.current) {
-            try {
-                playerRef.current.cueVideoById({ videoId: videoId });
-                if (autoplay) {
-                    playerRef.current.playVideo();
+            if (!isPlaying) {
+                console.log("Pausing video...");
+                try {
+                    playerRef.current.pauseVideo();
+                } catch (error) {
+                    console.error("Error pausing video:", error);
                 }
-            } catch (error) {
-                console.error("Error cueing or playing video:", error);
+            } else {
+                try {
+                    console.log("Cueing and playing video...");
+                    playerRef.current.cueVideoById({ videoId: videoId });
+                    if (autoplay) {
+                        playerRef.current.playVideo();
+                    }
+                } catch (error) {
+                    console.error("Error cueing or playing video:", error);
+                }
             }
         }
-    }, [videoId, autoplay, isReady]);
+    }, [videoId, autoplay, isReady, isPlaying]);
+
 
     useImperativeHandle(ref, () => ({
         playVideo: () => {
@@ -68,6 +91,15 @@ const YouTubePlainPlayer = forwardRef<YouTubePlainPlayerRef, YouTubePlainPlayerP
             modestbranding: 1,
         },
     };
+
+    // Inside YouTubePlainPlayer component
+    useEffect(() => {
+        console.log("Playback state change detected. isPlaying:", isPlaying);
+        if (!isPlaying && playerRef.current) {
+            playerRef.current.pauseVideo();
+        }
+    }, [isPlaying]); // Listen specifically to isPlaying changes
+
 
     return (
         <YouTube

@@ -3,6 +3,7 @@
 import React, { Suspense, useState, FormEvent, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Spinner from '../ui/Spinner';
+import { usePlayback } from "@/contexts/PlaybackContext";
 
 const YouTubeVideoList = React.lazy(() => import('../YouTubeVideoList'));
 const YouTubeSearchForm = React.lazy(() => import('./YouTubeSearchForm'));
@@ -16,6 +17,7 @@ interface YoutubeSearchProps {
 const YoutubeSearch: React.FC<YoutubeSearchProps> = ({ searchResults, searchTerm }) => {
     const router = useRouter();
     const searchParams = useSearchParams();
+    const { stopPlaying } = usePlayback();
 
     const [currentSearchTerm, setCurrentSearchTerm] = useState<string>(searchTerm);
     const [searchInitiated, setSearchInitiated] = useState<boolean>(false);
@@ -23,8 +25,8 @@ const YoutubeSearch: React.FC<YoutubeSearchProps> = ({ searchResults, searchTerm
     const handleSearch = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (!currentSearchTerm) return;
-        setSearchInitiated(true);
-        router.push(`?searchTerm=${currentSearchTerm}&searchInitiated=true`);
+        stopPlaying();  // This now sets isPlaying to false
+        router.push(`?searchTerm=${currentSearchTerm}`);
     };
 
     useEffect(() => {

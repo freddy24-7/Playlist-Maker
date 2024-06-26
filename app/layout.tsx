@@ -5,6 +5,7 @@ import { Header } from "@/components/ui/Header";
 import { Footer } from "@/components/ui/Footer";
 import { Metadata } from 'next'
 import "./globals.css";
+import { PlaybackProvider } from "@/contexts/PlaybackContext";
 
 export const metadata: Metadata = {
     title: 'Create Your Own YouTube Playlist | Custom Video Collections',
@@ -25,9 +26,11 @@ export default function RootLayout({ children }: Props) {
     return (
         <html lang="en">
         <body className={cn(poppins.className, "dark")}>
-            <Header />
+        <Header />
             <div className="flex flex-col gap-4 min-h-screen p-4 md:p-8 lg:p-12">
-                {children}
+                <PlaybackProvider>
+                    {children}
+                </PlaybackProvider>
             </div>
             <Footer />
         </body>
