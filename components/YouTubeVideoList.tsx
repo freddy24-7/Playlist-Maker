@@ -30,6 +30,7 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
     const [songList, setSongList] = useState<Video[]>([]);
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [displayList, setDisplayList] = useState(true);  // State to control display of the list
 
     useEffect(() => {
         const storedSongs = localStorage.getItem('songList');
@@ -40,6 +41,7 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
 
     const handleVideoSelect = (videoId: string) => {
         setVideoId(videoId);
+        setDisplayList(false);  // Hide the list when playing a video
     };
 
     const handleAddToList = (video: Video) => {
@@ -53,13 +55,20 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
         if (songList.length > 0 && !isPlaying) {
             setIsPlaying(true);
             playVideoAtIndex(0);
+            setDisplayList(false);  // Hide the list when playing the playlist
         }
     };
 
+    const handleClearList = () => {
+        localStorage.removeItem('songList');
+        setSongList([]);
+        alert('Playlist cleared');
+    };
+
     const playVideoAtIndex = (index: number) => {
-        setCurrentIndex(index);  // Set the current index to the new index
+        setCurrentIndex(index);
         const videoId = songList[index].id.videoId;
-        setVideoId(videoId);     // Update the video ID to start playing
+        setVideoId(videoId);
     };
 
     const onVideoEnd = () => {
@@ -71,6 +80,7 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
         } else {
             console.log('Reached end of playlist.');
             setIsPlaying(false);
+            setDisplayList(true);  // Optionally show the list again when playlist ends
         }
     };
 
@@ -86,7 +96,7 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
                     />
                 )}
             </div>
-            {videos.map((video) => (
+            {displayList && videos.map((video) => (
                 <Card key={video.id.videoId} className="cursor-pointer hover:shadow-lg transition-shadow">
                     <CardHeader>
                         <Image
@@ -100,12 +110,15 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
                         <CardTitle>{video.snippet.title}</CardTitle>
                         <CardDescription>{video.snippet.description || 'No description available.'}</CardDescription>
                     </CardContent>
-                    <CardFooter className="flex space-x-2">
+                    <CardFooter className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                         <Button type="button" onClick={() => handleVideoSelect(video.id.videoId)}>
                             Play
                         </Button>
                         <Button type="button" onClick={() => handleAddToList(video)}>
                             Add to List
+                        </Button>
+                        <Button type="button" onClick={handleClearList}>
+                            Clear List
                         </Button>
                         <Button type="button" onClick={handlePlayList}>
                             Play List
@@ -113,6 +126,9 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
                     </CardFooter>
                 </Card>
             ))}
+            <Button type="button" onClick={() => setDisplayList(!displayList)} className="mt-4">
+                {displayList ? "Hide List" : "Show List"}
+            </Button>
         </div>
     );
 };
