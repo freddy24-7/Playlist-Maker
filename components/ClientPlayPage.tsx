@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import YouTubePlainPlayer from '@/components/YouTubePlainPlayer';
 
 interface Video {
@@ -24,9 +24,9 @@ const ClientPlayPage: React.FC = () => {
     const [videos, setVideos] = useState<Video[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [autoplay, setAutoplay] = useState(false);
+    const [videoId, setVideoId] = useState('');
 
     useEffect(() => {
-        const videoId = router.query.videoId as string; // Ensure videoId is treated as a string
         const playlist = localStorage.getItem('songList');
 
         if (playlist) {

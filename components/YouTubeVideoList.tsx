@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import YouTubePlainPlayer from '@/components/YouTubePlainPlayer';
+import { useRouter } from 'next/navigation';
 
 interface Video {
     id: {
@@ -30,7 +31,8 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
     const [songList, setSongList] = useState<Video[]>([]);
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [displayList, setDisplayList] = useState(true);  // State to control display of the list
+    const [displayList, setDisplayList] = useState(true);
+    const router = useRouter();
 
     useEffect(() => {
         const storedSongs = localStorage.getItem('songList');
@@ -41,8 +43,11 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
 
     const handleVideoSelect = (videoId: string) => {
         setVideoId(videoId);
-        setDisplayList(false);  // Hide the list when playing a video
+        setDisplayList(false);
+        const query = `?videoId=${videoId}`;
+        router.push(`/play/${videoId}${query}`);
     };
+    console.log(videoId);
 
     const handleAddToList = (video: Video) => {
         const updatedList = [...songList, video];
