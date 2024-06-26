@@ -16,7 +16,6 @@ interface YoutubeSearchProps {
 const YoutubeSearch: React.FC<YoutubeSearchProps> = ({ searchResults, searchTerm }) => {
     const router = useRouter();
     const searchParams = useSearchParams();
-
     const [currentSearchTerm, setCurrentSearchTerm] = useState<string>(searchTerm);
     const [searchInitiated, setSearchInitiated] = useState<boolean>(false);
 

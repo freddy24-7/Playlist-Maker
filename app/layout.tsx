@@ -25,11 +25,11 @@ export default function RootLayout({ children }: Props) {
     return (
         <html lang="en">
         <body className={cn(poppins.className, "dark")}>
-            <Header />
-            <div className="flex flex-col gap-4 min-h-screen p-4 md:p-8 lg:p-12">
+        <Header />
+        <div className="flex flex-col gap-4 min-h-screen p-4 md:p-8 lg:p-12">
                 {children}
-            </div>
-            <Footer />
+        </div>
+        <Footer />
         </body>
         </html>
     );
