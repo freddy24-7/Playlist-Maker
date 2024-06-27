@@ -7,7 +7,12 @@ import { Button } from '@/components/ui/button';
 import { LightDarkToggle } from '@/components/ui/light-dark-toggle';
 import { CldImage } from 'next-cloudinary';
 
-export const Header = () => {
+interface HeaderProps {
+    onPlayList: () => void;
+    onPlayShuffle: () => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({ onPlayList, onPlayShuffle }) => {
     const router = useRouter();
     const [isDesktopOrLaptop, setIsDesktopOrLaptop] = useState(false);
 
@@ -53,15 +58,23 @@ export const Header = () => {
                 </div>
                 <h2 className="text-xs sm:text-base">Create your own playlist</h2>
             </div>
-            <Button
-                onClick={handleHomeClick}
-                className="mt-2 sm:mt-0 bg-transparent hover:bg-white hover:text-orange-400 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300 flex items-center"
-                aria-label="Home"
-                role="button"
-            >
-                <HomeIcon size={20} className="sm:size-50 mr-3" aria-hidden="true" />
-                <span className="sr-only">Home</span>
-            </Button>
+            <div className="flex gap-2">
+                <Button
+                    onClick={handleHomeClick}
+                    className="mt-2 sm:mt-0 bg-transparent hover:bg-white hover:text-orange-400 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300 flex items-center"
+                    aria-label="Home"
+                    role="button"
+                >
+                    <HomeIcon size={20} className="sm:size-50 mr-3" aria-hidden="true" />
+                    <span className="sr-only">Home</span>
+                </Button>
+                <Button onClick={onPlayList} className="bg-transparent hover:bg-white hover:text-orange-400 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300">
+                    Play List
+                </Button>
+                <Button onClick={onPlayShuffle} className="bg-transparent hover:bg-white hover:text-orange-400 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300">
+                    Play Shuffle
+                </Button>
+            </div>
             <LightDarkToggle className="fixed top-6 right-2" />
         </header>
     );

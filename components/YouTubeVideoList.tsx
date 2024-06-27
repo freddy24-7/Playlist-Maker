@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import YouTubePlainPlayer from '@/components/YouTubePlainPlayer';
@@ -30,114 +29,29 @@ interface Video {
 
 interface YouTubeVideoListProps {
     videos: Video[];
+    handleAddToList: (video: Video) => void;
+    handleClearList: () => void;
+    handlePlayList: () => void;
+    handlePlayShuffle: () => void;
+    isDialogOpen: boolean;
+    setIsDialogOpen: (open: boolean) => void;
+    dialogMessage: string;
+    videoId: string;
+    onVideoEnd: () => void;
 }
 
-// Function to shuffle an array using Fisher-Yates (Knuth) Shuffle algorithm
-function shuffle(array: any[]) {
-    let currentIndex = array.length;
-    while (currentIndex !== 0) {
-        let randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex--;
-
-        // Swap elements at currentIndex and randomIndex
-        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-    }
-    return array;
-}
-
-const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
-    const router = useRouter();
-    const [videoId, setVideoId] = useState('');
-    const [songList, setSongList] = useState<Video[]>([]);
-    const [shuffledList, setShuffledList] = useState<Video[]>([]);
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [dialogMessage, setDialogMessage] = useState('');
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [isShuffle, setIsShuffle] = useState(false);
-
-    const MAX_SONGS = 10;
-
-    useEffect(() => {
-        const storedSongs = localStorage.getItem('songList');
-        const storedShuffledList = localStorage.getItem('shuffledList');
-
-        if (storedSongs) {
-            const parsedList = JSON.parse(storedSongs);
-            setSongList(parsedList);
-            const shuffledState = storedShuffledList ? JSON.parse(storedShuffledList) : shuffle([...parsedList]);
-            setShuffledList(shuffledState);
-        }
-    }, []);
-
-    const handleAddToList = (video: Video) => {
-        if (songList.length < MAX_SONGS) {
-            const updatedList = [...songList, video];
-            setSongList(updatedList);
-            localStorage.setItem('songList', JSON.stringify(updatedList));
-            const message = `Item added, list now has ${updatedList.length} ${updatedList.length === 1 ? 'item' : 'items'}`;
-            showDialog(updatedList.length === MAX_SONGS ? `${message}. This is the maximum number of items` : message);
-        } else {
-            showDialog(`Cannot add more items. The maximum number of items is ${MAX_SONGS}.`);
-        }
-    };
-
-    const handlePlayList = () => {
-        if (songList.length > 0 && !isPlaying) {
-            setIsPlaying(true);
-            setIsShuffle(false);
-            localStorage.setItem('shuffleActive', 'false'); // Store shuffle state
-            playVideoAtIndex(songList, 0);
-        }
-    };
-
-    const handlePlayShuffle = () => {
-        if (songList.length > 0 && !isPlaying) {
-            const shuffled = shuffle([...songList]);
-            setShuffledList(shuffled);
-            localStorage.setItem('shuffledList', JSON.stringify(shuffled));
-            localStorage.setItem('shuffleActive', 'true'); // Store shuffle state
-            setIsPlaying(true);
-            setIsShuffle(true);
-            playVideoAtIndex(shuffled, 0);
-        }
-    };
-
-    const handleClearList = () => {
-        localStorage.removeItem('songList');
-        localStorage.removeItem('shuffledList'); // Clear shuffled list from localStorage
-        setSongList([]);
-        setShuffledList([]);
-        showDialog('Playlist cleared');
-    };
-
-    const playVideoAtIndex = (list: Video[], index: number) => {
-        if (list.length > 0) {
-            setCurrentIndex(index);
-            const videoId = list[index].id.videoId;
-            setVideoId(videoId); // Update videoId state
-            router.push(`/play/${videoId}`); // Navigate to the dynamic route
-        }
-    };
-
-    const onVideoEnd = () => {
-        console.log('Current video ended, moving to next...');
-        const nextIndex = currentIndex + 1;
-        const listToUse = isShuffle ? shuffledList : songList; // Use shuffled list if shuffle mode is on
-        if (nextIndex < listToUse.length) {
-            console.log(`Playing video at index ${nextIndex}`);
-            playVideoAtIndex(listToUse, nextIndex);
-        } else {
-            console.log('Reached end of playlist.');
-            setIsPlaying(false);
-        }
-    };
-
-    const showDialog = (message: string) => {
-        setDialogMessage(message);
-        setIsDialogOpen(true);
-    };
-
+const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({
+                                                               videos,
+                                                               handleAddToList,
+                                                               handleClearList,
+                                                               handlePlayList,
+                                                               handlePlayShuffle,
+                                                               isDialogOpen,
+                                                               setIsDialogOpen,
+                                                               dialogMessage,
+                                                               videoId,
+                                                               onVideoEnd,
+                                                           }) => {
     return (
         <div className="space-y-4 mb-4">
             <div className="video-player-container">
