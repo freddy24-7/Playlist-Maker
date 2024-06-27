@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import YouTubePlainPlayer from '@/components/YouTubePlainPlayer';
@@ -26,11 +27,12 @@ interface YouTubeVideoListProps {
 }
 
 const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
+    const router = useRouter();
     const [videoId, setVideoId] = useState('');
     const [songList, setSongList] = useState<Video[]>([]);
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [displayList, setDisplayList] = useState(true);  // State to control display of the list
+    const [displayList, setDisplayList] = useState(true);
 
     useEffect(() => {
         const storedSongs = localStorage.getItem('songList');
@@ -42,6 +44,7 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
     const handleVideoSelect = (videoId: string) => {
         setVideoId(videoId);
         setDisplayList(false);  // Hide the list when playing a video
+        router.push(`/play/${videoId}`); // Navigate to the dynamic route
     };
 
     const handleAddToList = (video: Video) => {
@@ -69,6 +72,7 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
         setCurrentIndex(index);
         const videoId = songList[index].id.videoId;
         setVideoId(videoId);
+        router.push(`/play/${videoId}`); // Navigate to the dynamic route
     };
 
     const onVideoEnd = () => {

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useSearchParams } from 'next/navigation';
 import YouTubePlainPlayer from '@/components/YouTubePlainPlayer';
 
 interface Video {
@@ -20,13 +20,13 @@ interface Video {
 }
 
 const ClientPlayPage: React.FC = () => {
-    const router = useRouter();
+    const searchParams = useSearchParams();
     const [videos, setVideos] = useState<Video[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [autoplay, setAutoplay] = useState(false);
 
     useEffect(() => {
-        const videoId = router.query.videoId as string; // Ensure videoId is treated as a string
+        const videoId = searchParams.get('videoId') as string; // Ensure videoId is treated as a string
         const playlist = localStorage.getItem('songList');
 
         if (playlist) {
@@ -36,7 +36,7 @@ const ClientPlayPage: React.FC = () => {
             setCurrentIndex(index === -1 ? 0 : index);
             setAutoplay(true);
         }
-    }, [router]);
+    }, [searchParams]);
 
     const onVideoEnd = () => {
         if (currentIndex < videos.length - 1) {
