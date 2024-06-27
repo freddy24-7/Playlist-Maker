@@ -2,15 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { MonitorPlayIcon, HomeIcon } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { LightDarkToggle } from '@/components/ui/light-dark-toggle';
 import { CldImage } from 'next-cloudinary';
 import { usePlaylistActions } from '@/hooks/usePlaylistActions';
 
 export const Header = () => {
-    const router = useRouter();
     const [isDesktopOrLaptop, setIsDesktopOrLaptop] = useState(false);
+    const [isPlaying, setIsPlaying] = useState(false);  // State to track if media is playing
     const { handlePlayList, handlePlayShuffle } = usePlaylistActions();
 
     useEffect(() => {
@@ -20,14 +19,22 @@ export const Header = () => {
 
         handleResize();
         window.addEventListener('resize', handleResize);
-
         return () => {
             window.removeEventListener('resize', handleResize);
         };
     }, []);
 
     const handleHomeClick = () => {
-        router.push('/');
+        window.location.href = '/';
+    };
+
+    const startPlaying = (handlePlayFunction: () => void) => {
+        setIsPlaying(true);
+        try {
+            handlePlayFunction();
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (
@@ -60,14 +67,16 @@ export const Header = () => {
                 <HomeIcon size={20} className="sm:size-50 mr-3" aria-hidden="true" />
                 <span className="sr-only">Home</span>
             </Button>
-            <div className="flex gap-2">
-                <Button onClick={handlePlayList} className="bg-transparent hover:bg-white hover:text-orange-400 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300">
-                    Play List
-                </Button>
-                <Button onClick={handlePlayShuffle} className="bg-transparent hover:bg-white hover:text-orange-400 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300">
-                    Play Shuffle
-                </Button>
-            </div>
+            {!isPlaying && (
+                <div className="flex gap-2">
+                    <Button onClick={() => startPlaying(handlePlayList)} className="bg-transparent hover:bg-white hover:text-orange-400 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300">
+                        Play List
+                    </Button>
+                    <Button onClick={() => startPlaying(handlePlayShuffle)} className="bg-transparent hover:bg-white hover:text-orange-400 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300">
+                        Play Shuffle
+                    </Button>
+                </div>
+            )}
             <LightDarkToggle className="fixed top-6 right-2" />
         </header>
     );

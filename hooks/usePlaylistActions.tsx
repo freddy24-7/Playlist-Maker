@@ -19,12 +19,12 @@ interface Video {
 export const usePlaylistActions = () => {
     const router = useRouter();
     const [songList, setSongList] = useState<Video[]>([]);
-    const [shuffledList, setShuffledList] = useState<Video[]>([]);
+    const [, setShuffledList] = useState<Video[]>([]);
     const [isPlaying, setIsPlaying] = useState(false);
-    const [currentIndex, setCurrentIndex] = useState(0);
+    const [, setCurrentIndex] = useState(0);
     const [isShuffle, setIsShuffle] = useState(false);
 
-    useEffect(() => {
+    const initializeState = () => {
         const storedSongs = localStorage.getItem('songList');
         const storedShuffledList = localStorage.getItem('shuffledList');
         const shuffleActive = localStorage.getItem('shuffleActive');
@@ -36,6 +36,20 @@ export const usePlaylistActions = () => {
             setShuffledList(shuffledState);
             setIsShuffle(shuffleActive === 'true');
         }
+    };
+
+    useEffect(() => {
+        initializeState();
+
+        const handleStorageChange = () => {
+            initializeState();
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+        };
     }, []);
 
     const shuffle = (array: any[]) => {
