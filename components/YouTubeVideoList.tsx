@@ -6,6 +6,14 @@ import { useRouter } from 'next/navigation';
 import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import YouTubePlainPlayer from '@/components/YouTubePlainPlayer';
+import {
+    AlertDialog,
+    AlertDialogContent,
+    AlertDialogHeader,
+    AlertDialogFooter,
+    AlertDialogDescription,
+    AlertDialogAction,
+} from '@/components/ui/alert-dialog';
 
 interface Video {
     id: {
@@ -32,7 +40,11 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
     const [songList, setSongList] = useState<Video[]>([]);
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [displayList, setDisplayList] = useState(true);
+    const [dialogMessage, setDialogMessage] = useState('');
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [shuffleList, setShuffleList] = useState<Video[]>([]);
+
+    const MAX_SONGS = 10;
 
     useEffect(() => {
         const storedSongs = localStorage.getItem('songList');
@@ -41,31 +53,38 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
         }
     }, []);
 
-    const handleVideoSelect = (videoId: string) => {
-        setVideoId(videoId);
-        setDisplayList(false);  // Hide the list when playing a video
-        router.push(`/play/${videoId}`); // Navigate to the dynamic route
-    };
-
     const handleAddToList = (video: Video) => {
-        const updatedList = [...songList, video];
-        setSongList(updatedList);
-        localStorage.setItem('songList', JSON.stringify(updatedList));
-        alert(`Item added, list now has ${updatedList.length} items`);
+        if (songList.length < MAX_SONGS) {
+            const updatedList = [...songList, video];
+            setSongList(updatedList);
+            localStorage.setItem('songList', JSON.stringify(updatedList));
+            const message = `Item added, list now has ${updatedList.length} ${updatedList.length === 1 ? 'item' : 'items'}`;
+            showDialog(updatedList.length === MAX_SONGS ? `${message}. This is the maximum number of items` : message);
+        } else {
+            showDialog(`Cannot add more items. The maximum number of items is ${MAX_SONGS}.`);
+        }
     };
 
     const handlePlayList = () => {
         if (songList.length > 0 && !isPlaying) {
             setIsPlaying(true);
             playVideoAtIndex(0);
-            setDisplayList(false);  // Hide the list when playing the playlist
+        }
+    };
+
+    const handlePlayShuffle = () => {
+        if (songList.length > 0 && !isPlaying) {
+            const shuffledList = [...songList].sort(() => Math.random() - 0.5);
+            setShuffleList(shuffledList);
+            setIsPlaying(true);
+            playShuffledVideoAtIndex(0);
         }
     };
 
     const handleClearList = () => {
         localStorage.removeItem('songList');
         setSongList([]);
-        alert('Playlist cleared');
+        showDialog('Playlist cleared');
     };
 
     const playVideoAtIndex = (index: number) => {
@@ -75,17 +94,38 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
         router.push(`/play/${videoId}`); // Navigate to the dynamic route
     };
 
+    const playShuffledVideoAtIndex = (index: number) => {
+        setCurrentIndex(index);
+        const videoId = shuffleList[index].id.videoId;
+        setVideoId(videoId);
+        router.push(`/play/${videoId}`); // Navigate to the dynamic route
+    };
+
     const onVideoEnd = () => {
         console.log('Current video ended, moving to next...');
         const nextIndex = currentIndex + 1;
-        if (nextIndex < songList.length) {
-            console.log(`Playing video at index ${nextIndex}`);
-            playVideoAtIndex(nextIndex);
+        if (shuffleList.length > 0) {
+            if (nextIndex < shuffleList.length) {
+                console.log(`Playing shuffled video at index ${nextIndex}`);
+                playShuffledVideoAtIndex(nextIndex);
+            } else {
+                console.log('Reached end of shuffled playlist.');
+                setIsPlaying(false);
+            }
         } else {
-            console.log('Reached end of playlist.');
-            setIsPlaying(false);
-            setDisplayList(true);  // Optionally show the list again when playlist ends
+            if (nextIndex < songList.length) {
+                console.log(`Playing video at index ${nextIndex}`);
+                playVideoAtIndex(nextIndex);
+            } else {
+                console.log('Reached end of playlist.');
+                setIsPlaying(false);
+            }
         }
+    };
+
+    const showDialog = (message: string) => {
+        setDialogMessage(message);
+        setIsDialogOpen(true);
     };
 
     return (
@@ -100,7 +140,7 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
                     />
                 )}
             </div>
-            {displayList && videos.map((video) => (
+            {videos.map((video) => (
                 <Card key={video.id.videoId} className="cursor-pointer hover:shadow-lg transition-shadow">
                     <CardHeader>
                         <Image
@@ -115,9 +155,6 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
                         <CardDescription>{video.snippet.description || 'No description available.'}</CardDescription>
                     </CardContent>
                     <CardFooter className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                        <Button type="button" onClick={() => handleVideoSelect(video.id.videoId)}>
-                            Play
-                        </Button>
                         <Button type="button" onClick={() => handleAddToList(video)}>
                             Add to List
                         </Button>
@@ -127,12 +164,23 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
                         <Button type="button" onClick={handlePlayList}>
                             Play List
                         </Button>
+                        <Button type="button" onClick={handlePlayShuffle}>
+                            Play Shuffle
+                        </Button>
                     </CardFooter>
                 </Card>
             ))}
-            <Button type="button" onClick={() => setDisplayList(!displayList)} className="mt-4">
-                {displayList ? "Hide List" : "Show List"}
-            </Button>
+
+            <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogDescription>{dialogMessage}</AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogAction onClick={() => setIsDialogOpen(false)}>OK</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 };
