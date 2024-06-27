@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -26,16 +26,23 @@ const ClientPlayPage: React.FC = () => {
     const [autoplay, setAutoplay] = useState(false);
 
     useEffect(() => {
-        const videoId = searchParams.get('videoId') as string; // Ensure videoId is treated as a string
+        const videoId = searchParams.get('videoId') as string;
         const playlist = localStorage.getItem('songList');
+        const shuffledList = localStorage.getItem('shuffledList');
+        const isShuffleActive = localStorage.getItem('shuffleActive') === 'true';
 
-        if (playlist) {
-            const songList: Video[] = JSON.parse(playlist); // Define the type on parsing
+        if (isShuffleActive && shuffledList) {
+            const shuffled: Video[] = JSON.parse(shuffledList);
+            setVideos(shuffled);
+            const index = shuffled.findIndex(song => song.id.videoId === videoId);
+            setCurrentIndex(index === -1 ? 0 : index);
+        } else if (playlist) {
+            const songList: Video[] = JSON.parse(playlist);
             setVideos(songList);
             const index = songList.findIndex(song => song.id.videoId === videoId);
             setCurrentIndex(index === -1 ? 0 : index);
-            setAutoplay(true);
         }
+        setAutoplay(true);
     }, [searchParams]);
 
     const onVideoEnd = () => {

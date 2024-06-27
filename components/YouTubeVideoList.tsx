@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -34,22 +32,41 @@ interface YouTubeVideoListProps {
     videos: Video[];
 }
 
+// Function to shuffle an array using Fisher-Yates (Knuth) Shuffle algorithm
+function shuffle(array: any[]) {
+    let currentIndex = array.length;
+    while (currentIndex !== 0) {
+        let randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        // Swap elements at currentIndex and randomIndex
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+    }
+    return array;
+}
+
 const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
     const router = useRouter();
     const [videoId, setVideoId] = useState('');
     const [songList, setSongList] = useState<Video[]>([]);
+    const [shuffledList, setShuffledList] = useState<Video[]>([]);
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [dialogMessage, setDialogMessage] = useState('');
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [shuffleList, setShuffleList] = useState<Video[]>([]);
+    const [isShuffle, setIsShuffle] = useState(false);
 
     const MAX_SONGS = 10;
 
     useEffect(() => {
         const storedSongs = localStorage.getItem('songList');
+        const storedShuffledList = localStorage.getItem('shuffledList');
+
         if (storedSongs) {
-            setSongList(JSON.parse(storedSongs));
+            const parsedList = JSON.parse(storedSongs);
+            setSongList(parsedList);
+            const shuffledState = storedShuffledList ? JSON.parse(storedShuffledList) : shuffle([...parsedList]);
+            setShuffledList(shuffledState);
         }
     }, []);
 
@@ -68,58 +85,51 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
     const handlePlayList = () => {
         if (songList.length > 0 && !isPlaying) {
             setIsPlaying(true);
-            playVideoAtIndex(0);
+            setIsShuffle(false);
+            localStorage.setItem('shuffleActive', 'false'); // Store shuffle state
+            playVideoAtIndex(songList, 0);
         }
     };
 
     const handlePlayShuffle = () => {
         if (songList.length > 0 && !isPlaying) {
-            const shuffledList = [...songList].sort(() => Math.random() - 0.5);
-            setShuffleList(shuffledList);
+            const shuffled = shuffle([...songList]);
+            setShuffledList(shuffled);
+            localStorage.setItem('shuffledList', JSON.stringify(shuffled));
+            localStorage.setItem('shuffleActive', 'true'); // Store shuffle state
             setIsPlaying(true);
-            playShuffledVideoAtIndex(0);
+            setIsShuffle(true);
+            playVideoAtIndex(shuffled, 0);
         }
     };
 
     const handleClearList = () => {
         localStorage.removeItem('songList');
+        localStorage.removeItem('shuffledList'); // Clear shuffled list from localStorage
         setSongList([]);
+        setShuffledList([]);
         showDialog('Playlist cleared');
     };
 
-    const playVideoAtIndex = (index: number) => {
-        setCurrentIndex(index);
-        const videoId = songList[index].id.videoId;
-        setVideoId(videoId);
-        router.push(`/play/${videoId}`); // Navigate to the dynamic route
-    };
-
-    const playShuffledVideoAtIndex = (index: number) => {
-        setCurrentIndex(index);
-        const videoId = shuffleList[index].id.videoId;
-        setVideoId(videoId);
-        router.push(`/play/${videoId}`); // Navigate to the dynamic route
+    const playVideoAtIndex = (list: Video[], index: number) => {
+        if (list.length > 0) {
+            setCurrentIndex(index);
+            const videoId = list[index].id.videoId;
+            setVideoId(videoId); // Update videoId state
+            router.push(`/play/${videoId}`); // Navigate to the dynamic route
+        }
     };
 
     const onVideoEnd = () => {
         console.log('Current video ended, moving to next...');
         const nextIndex = currentIndex + 1;
-        if (shuffleList.length > 0) {
-            if (nextIndex < shuffleList.length) {
-                console.log(`Playing shuffled video at index ${nextIndex}`);
-                playShuffledVideoAtIndex(nextIndex);
-            } else {
-                console.log('Reached end of shuffled playlist.');
-                setIsPlaying(false);
-            }
+        const listToUse = isShuffle ? shuffledList : songList; // Use shuffled list if shuffle mode is on
+        if (nextIndex < listToUse.length) {
+            console.log(`Playing video at index ${nextIndex}`);
+            playVideoAtIndex(listToUse, nextIndex);
         } else {
-            if (nextIndex < songList.length) {
-                console.log(`Playing video at index ${nextIndex}`);
-                playVideoAtIndex(nextIndex);
-            } else {
-                console.log('Reached end of playlist.');
-                setIsPlaying(false);
-            }
+            console.log('Reached end of playlist.');
+            setIsPlaying(false);
         }
     };
 
