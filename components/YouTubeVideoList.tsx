@@ -12,6 +12,7 @@ import {
     AlertDialogDescription,
     AlertDialogAction,
 } from '@/components/ui/alert-dialog';
+import { usePlaylistActions } from '@/hooks/usePlaylistActions';
 
 interface Video {
     id: {
@@ -32,19 +33,6 @@ interface YouTubeVideoListProps {
     videos: Video[];
 }
 
-// Function to shuffle an array using Fisher-Yates (Knuth) Shuffle algorithm
-function shuffle(array: any[]) {
-    let currentIndex = array.length;
-    while (currentIndex !== 0) {
-        let randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex--;
-
-        // Swap elements at currentIndex and randomIndex
-        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-    }
-    return array;
-}
-
 const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
     const router = useRouter();
     const [videoId, setVideoId] = useState('');
@@ -54,7 +42,7 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [dialogMessage, setDialogMessage] = useState('');
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [isShuffle, setIsShuffle] = useState(false);
+    const { handlePlayList, handlePlayShuffle, shuffle, isShuffle } = usePlaylistActions();
 
     const MAX_SONGS = 10;
 
@@ -79,27 +67,6 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
             showDialog(updatedList.length === MAX_SONGS ? `${message}. This is the maximum number of items` : message);
         } else {
             showDialog(`Cannot add more items. The maximum number of items is ${MAX_SONGS}.`);
-        }
-    };
-
-    const handlePlayList = () => {
-        if (songList.length > 0 && !isPlaying) {
-            setIsPlaying(true);
-            setIsShuffle(false);
-            localStorage.setItem('shuffleActive', 'false'); // Store shuffle state
-            playVideoAtIndex(songList, 0);
-        }
-    };
-
-    const handlePlayShuffle = () => {
-        if (songList.length > 0 && !isPlaying) {
-            const shuffled = shuffle([...songList]);
-            setShuffledList(shuffled);
-            localStorage.setItem('shuffledList', JSON.stringify(shuffled));
-            localStorage.setItem('shuffleActive', 'true'); // Store shuffle state
-            setIsPlaying(true);
-            setIsShuffle(true);
-            playVideoAtIndex(shuffled, 0);
         }
     };
 

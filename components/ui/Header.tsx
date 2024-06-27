@@ -6,23 +6,21 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { LightDarkToggle } from '@/components/ui/light-dark-toggle';
 import { CldImage } from 'next-cloudinary';
+import { usePlaylistActions } from '@/hooks/usePlaylistActions';
 
 export const Header = () => {
     const router = useRouter();
     const [isDesktopOrLaptop, setIsDesktopOrLaptop] = useState(false);
+    const { handlePlayList, handlePlayShuffle } = usePlaylistActions();
 
     useEffect(() => {
         const handleResize = () => {
             setIsDesktopOrLaptop(window.innerWidth >= 640);
         };
 
-        // Set initial state
         handleResize();
-
-        // Add event listener
         window.addEventListener('resize', handleResize);
 
-        // Clean up event listener
         return () => {
             window.removeEventListener('resize', handleResize);
         };
@@ -62,6 +60,14 @@ export const Header = () => {
                 <HomeIcon size={20} className="sm:size-50 mr-3" aria-hidden="true" />
                 <span className="sr-only">Home</span>
             </Button>
+            <div className="flex gap-2">
+                <Button onClick={handlePlayList} className="bg-transparent hover:bg-white hover:text-orange-400 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300">
+                    Play List
+                </Button>
+                <Button onClick={handlePlayShuffle} className="bg-transparent hover:bg-white hover:text-orange-400 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300">
+                    Play Shuffle
+                </Button>
+            </div>
             <LightDarkToggle className="fixed top-6 right-2" />
         </header>
     );
