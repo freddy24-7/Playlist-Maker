@@ -90,7 +90,7 @@ export const Header = () => {
             </div>
             <Button
                 onClick={handleHomeClick}
-                className="mt-2 sm:mt-0 bg-transparent hover:bg-white hover:text-orange-400 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300 flex items-center"
+                className="mt-2 sm:mt-0 bg-transparent hover:bg-white hover:text-pink-700 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300 flex items-center"
                 aria-label="Home"
                 role="button"
             >
@@ -99,13 +99,13 @@ export const Header = () => {
             </Button>
             {!isPlaying && (
                 <div className="flex gap-2">
-                    <Button onClick={() => startPlaying(handlePlayList)} className="bg-transparent hover:bg-white hover:text-orange-400 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300">
+                    <Button onClick={() => startPlaying(handlePlayList)} className="bg-transparent hover:bg-white hover:text-pink-700 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300">
                         Play List
                     </Button>
-                    <Button onClick={() => startPlaying(handlePlayShuffle)} className="bg-transparent hover:bg-white hover:text-orange-400 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300">
+                    <Button onClick={() => startPlaying(handlePlayShuffle)} className="bg-transparent hover:bg-white hover:text-pink-700 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300">
                         Play Shuffle
                     </Button>
-                    <Button onClick={handleDisplayList} className="bg-transparent hover:bg-white hover:text-orange-400 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300">
+                    <Button onClick={handleDisplayList} className="bg-transparent hover:bg-white hover:text-pink-700 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300 mr-4">
                         Display List
                     </Button>
                 </div>

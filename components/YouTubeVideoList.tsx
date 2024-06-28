@@ -13,6 +13,16 @@ import {
     AlertDialogAction,
 } from '@/components/ui/alert-dialog';
 import { usePlaylistActions } from '@/hooks/usePlaylistActions';
+import {
+    Drawer,
+    DrawerTrigger,
+    DrawerContent,
+    DrawerHeader,
+    DrawerFooter,
+    DrawerTitle,
+    DrawerDescription,
+    DrawerClose
+} from '@/components/ui/drawer'; // Import drawer components
 
 interface Video {
     id: {
@@ -131,19 +141,38 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
                         <CardTitle>{video.snippet.title}</CardTitle>
                         <CardDescription>{video.snippet.description || 'No description available.'}</CardDescription>
                     </CardContent>
-                    <CardFooter className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                        <Button type="button" onClick={() => handleAddToList(video)}>
-                            Add to List
-                        </Button>
-                        <Button type="button" onClick={handleClearList}>
-                            Clear List
-                        </Button>
-                        <Button type="button" onClick={handlePlayList}>
-                            Play List
-                        </Button>
-                        <Button type="button" onClick={handlePlayShuffle}>
-                            Play Shuffle
-                        </Button>
+                    <CardFooter>
+                        <Drawer>
+                            <DrawerTrigger>
+                                <Button type="button" size="sm" className="w-full">
+                                    Open
+                                </Button>
+                            </DrawerTrigger>
+                            <DrawerContent>
+                                <DrawerHeader>
+                                    <DrawerTitle>Video Options</DrawerTitle>
+                                </DrawerHeader>
+                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 p-4">
+                                    <Button type="button" size="sm" className="w-full" onClick={() => handleAddToList(video)}>
+                                        Add to List
+                                    </Button>
+                                    <Button type="button" size="sm" className="w-full" onClick={handleClearList}>
+                                        Clear List
+                                    </Button>
+                                    <Button type="button" size="sm" className="w-full" onClick={handlePlayList}>
+                                        Play List
+                                    </Button>
+                                    <Button type="button" size="sm" className="w-full" onClick={handlePlayShuffle}>
+                                        Play Shuffle
+                                    </Button>
+                                    <DrawerClose>
+                                        <Button type="button" size="sm" className="w-full">
+                                            Close
+                                        </Button>
+                                    </DrawerClose>
+                                </div>
+                            </DrawerContent>
+                        </Drawer>
                     </CardFooter>
                 </Card>
             ))}
