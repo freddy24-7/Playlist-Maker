@@ -6,10 +6,23 @@ import { Button } from '@/components/ui/button';
 import { LightDarkToggle } from '@/components/ui/light-dark-toggle';
 import { CldImage } from 'next-cloudinary';
 import { usePlaylistActions } from '@/hooks/usePlaylistActions';
+import DisplayListModal from '@/components/DisplayListModal';
+
+interface MediaItem {
+    id: {
+        videoId: string;
+    };
+    snippet: {
+        title: string;
+        description: string;
+    };
+}
 
 export const Header = () => {
     const [isDesktopOrLaptop, setIsDesktopOrLaptop] = useState(false);
-    const [isPlaying, setIsPlaying] = useState(false);  // State to track if media is playing
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [isDisplayListOpen, setIsDisplayListOpen] = useState(false); // State to manage display list modal visibility
+    const [mediaList, setMediaList] = useState<MediaItem[]>([]); // State to store media list
     const { handlePlayList, handlePlayShuffle } = usePlaylistActions();
 
     useEffect(() => {
@@ -35,6 +48,23 @@ export const Header = () => {
         } catch (error) {
             console.error(error);
         }
+    };
+
+    const handleDisplayList = () => {
+        const storedMediaList = localStorage.getItem('songList');
+        if (storedMediaList) {
+            setMediaList(JSON.parse(storedMediaList));
+            setIsDisplayListOpen(true); // Open the modal to display the list
+        } else {
+            console.log('No media files found in local storage');
+        }
+    };
+
+    const handleDeleteMedia = (index: number) => {
+        const updatedMediaList = [...mediaList];
+        updatedMediaList.splice(index, 1);
+        setMediaList(updatedMediaList);
+        localStorage.setItem('songList', JSON.stringify(updatedMediaList));
     };
 
     return (
@@ -75,9 +105,18 @@ export const Header = () => {
                     <Button onClick={() => startPlaying(handlePlayShuffle)} className="bg-transparent hover:bg-white hover:text-orange-400 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300">
                         Play Shuffle
                     </Button>
+                    <Button onClick={handleDisplayList} className="bg-transparent hover:bg-white hover:text-orange-400 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300">
+                        Display List
+                    </Button>
                 </div>
             )}
             <LightDarkToggle className="fixed top-6 right-2" />
+            <DisplayListModal
+                isOpen={isDisplayListOpen}
+                onClose={() => setIsDisplayListOpen(false)}
+                mediaList={mediaList}
+                onDelete={handleDeleteMedia}
+            />
         </header>
     );
 };
