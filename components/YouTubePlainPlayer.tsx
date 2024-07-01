@@ -13,26 +13,12 @@ export interface YouTubePlainPlayerRef {
     pauseVideo: () => void;
 }
 
-// eslint-disable-next-line react/display-name
-// Assume you've already imported necessary dependencies and defined interfaces as before
-
 const YouTubePlainPlayer: React.ForwardRefRenderFunction<YouTubePlainPlayerRef, YouTubePlainPlayerProps> = (props, ref) => {
     const { videoId, autoplay, onVideoEnd } = props;
     const playerRef = useRef<YouTubePlayer | null>(null);
     const [isReady, setIsReady] = useState(false);
 
     useEffect(() => {
-        const opts: YouTubeProps['opts'] = {
-            playerVars: {
-                autoplay: autoplay ? 1 : 0, // Ensure proper autoplay handling
-                controls: 1,
-                rel: 0,
-                enablejsapi: 1,
-                modestbranding: 1,
-                mute: 1, // Start the video muted
-            },
-        };
-
         if (isReady && playerRef.current) {
             try {
                 playerRef.current.cueVideoById({ videoId });
@@ -45,7 +31,18 @@ const YouTubePlainPlayer: React.ForwardRefRenderFunction<YouTubePlainPlayerRef, 
         }
     }, [videoId, autoplay, isReady]);
 
-    // Ensure imperative handle setup remains the same
+    useImperativeHandle(ref, () => ({
+        playVideo: () => {
+            if (playerRef.current) {
+                playerRef.current.playVideo();
+            }
+        },
+        pauseVideo: () => {
+            if (playerRef.current) {
+                playerRef.current.pauseVideo();
+            }
+        }
+    }));
 
     const onReady: YouTubeProps['onReady'] = (event) => {
         playerRef.current = event.target;
@@ -62,7 +59,7 @@ const YouTubePlainPlayer: React.ForwardRefRenderFunction<YouTubePlainPlayerRef, 
     };
 
     const onStateChange: YouTubeProps['onStateChange'] = (event) => {
-        // Add any necessary state change handling here
+        // Handle state changes if necessary
     };
 
     const opts: YouTubeProps['opts'] = {
@@ -72,7 +69,7 @@ const YouTubePlainPlayer: React.ForwardRefRenderFunction<YouTubePlainPlayerRef, 
             rel: 0,
             enablejsapi: 1,
             modestbranding: 1,
-            mute: 1, // Start the video muted
+            mute: 1, // Ensure video starts muted for autoplay
         },
     };
 
@@ -89,4 +86,3 @@ const YouTubePlainPlayer: React.ForwardRefRenderFunction<YouTubePlainPlayerRef, 
 };
 
 export default React.forwardRef(YouTubePlainPlayer);
-
