@@ -48,7 +48,7 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
     const [shuffledList, setShuffledList] = useState<Video[]>([]);
     const [, setIsPlaying] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [openDrawerIndex, setOpenDrawerIndex] = useState<number | null>(null); // State for currently opened drawer
     const {
         handlePlayList,
         handlePlayShuffle,
@@ -76,11 +76,23 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
 
     const handleAddToList = (video: Video) => {
         if (songList.length < MAX_SONGS) {
-            const updatedList = [...songList, video];
-            setSongList(updatedList);
-            localStorage.setItem('songList', JSON.stringify(updatedList));
-            const message = `Item added, list now has ${updatedList.length} ${updatedList.length === 1 ? 'item' : 'items'}`;
-            showDialog(updatedList.length === MAX_SONGS ? `${message}. This is the maximum number of items` : message);
+            const index = videos.findIndex(v => v.id.videoId === video.id.videoId);
+
+            console.log('Adding video:', video);
+            console.log('Index found:', index);
+
+            if (index !== -1) {
+                const updatedList = [...songList, video];
+                console.log('Updated list:', updatedList);
+
+                setSongList(updatedList);
+                localStorage.setItem('songList', JSON.stringify(updatedList));
+
+                const message = `Item added, list now has ${updatedList.length} ${updatedList.length === 1 ? 'item' : 'items'}`;
+                showDialog(updatedList.length === MAX_SONGS ? `${message}. This is the maximum number of items` : message);
+            } else {
+                console.error('Video not found in the original list.');
+            }
         } else {
             showDialog(`Cannot add more items. The maximum number of items is ${MAX_SONGS}.`);
         }
@@ -98,6 +110,7 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
         if (list.length > 0) {
             setCurrentIndex(index);
             const videoId = list[index].id.videoId;
+            console.log('Playing video at index', index, 'with videoId', videoId);
             setVideoId(videoId); // Update videoId state
             router.push(`/play/${videoId}`); // Navigate to the dynamic route
         }
@@ -121,7 +134,7 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
         setIsDialogOpen(true);
         setTimeout(() => {
             setIsDialogOpen(false);
-            setIsDrawerOpen(false); // Close the drawer as well
+            setOpenDrawerIndex(null); // Close the drawer as well
         }, 300); // Close the dialog after 300ms
     };
 
@@ -137,7 +150,7 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
                     />
                 )}
             </div>
-            {videos.map((video) => (
+            {videos.map((video, index) => (
                 <Card key={video.id.videoId} className="cursor-pointer hover:shadow-lg transition-shadow">
                     <CardHeader>
                         <Image
@@ -152,7 +165,7 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
                         <CardDescription>{video.snippet.description || 'No description available.'}</CardDescription>
                     </CardContent>
                     <CardFooter>
-                        <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+                        <Drawer open={openDrawerIndex === index} onOpenChange={(open) => setOpenDrawerIndex(open ? index : null)}>
                             <DrawerTrigger>
                                 <Button type="button" size="sm" className="w-full">
                                     Options
