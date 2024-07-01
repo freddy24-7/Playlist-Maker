@@ -18,6 +18,7 @@ const YouTubePlainPlayer = forwardRef<YouTubePlainPlayerRef, YouTubePlainPlayerP
     const { videoId, autoplay, onVideoEnd } = props;
     const playerRef = useRef<YouTubePlayer | null>(null);
     const [isReady, setIsReady] = useState(false);
+    const [isMuted, setIsMuted] = useState(true); // New state to track mute status
 
     useEffect(() => {
         if (isReady && playerRef.current) {
@@ -59,6 +60,14 @@ const YouTubePlainPlayer = forwardRef<YouTubePlainPlayerRef, YouTubePlainPlayerP
         }
     };
 
+    const onStateChange: YouTubeProps['onStateChange'] = (event) => {
+        // Unmute the video once it starts playing
+        if (event.data === YouTube.PlayerState.PLAYING && isMuted && playerRef.current) {
+            playerRef.current.unMute();
+            setIsMuted(false);
+        }
+    };
+
     const opts: YouTubeProps['opts'] = {
         playerVars: {
             autoplay: autoplay ? 1 : 0,
@@ -66,6 +75,7 @@ const YouTubePlainPlayer = forwardRef<YouTubePlainPlayerRef, YouTubePlainPlayerP
             rel: 0,
             enablejsapi: 1,
             modestbranding: 1,
+            mute: 1, // Start the video muted
         },
     };
 
@@ -75,6 +85,7 @@ const YouTubePlainPlayer = forwardRef<YouTubePlainPlayerRef, YouTubePlainPlayerP
             opts={opts}
             onReady={onReady}
             onEnd={onEnd}
+            onStateChange={onStateChange} // Add onStateChange handler
             className={props.className}
         />
     );

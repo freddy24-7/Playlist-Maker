@@ -134,8 +134,8 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
         setIsDialogOpen(true);
         setTimeout(() => {
             setIsDialogOpen(false);
-            setOpenDrawerIndex(null); // Close the drawer as well
-        }, 300); // Close the dialog after 300ms
+            setOpenDrawerIndex(null);
+        }, 1000);
     };
 
     return (
