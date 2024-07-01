@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { initializeSongLists, shuffle } from '@/utils/playlistUtils'; // Import utilities
 
 interface Video {
     id: {
@@ -26,25 +27,11 @@ export const usePlaylistActions = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false); // State for dialog
     const [dialogMessage, setDialogMessage] = useState(''); // State for dialog message
 
-    const initializeState = () => {
-        const storedSongs = localStorage.getItem('songList');
-        const storedShuffledList = localStorage.getItem('shuffledList');
-        const shuffleActive = localStorage.getItem('shuffleActive');
-
-        if (storedSongs) {
-            const parsedList = JSON.parse(storedSongs);
-            setSongList(parsedList);
-            const shuffledState = storedShuffledList ? JSON.parse(storedShuffledList) : shuffle([...parsedList]);
-            setShuffledList(shuffledState);
-            setIsShuffle(shuffleActive === 'true');
-        }
-    };
-
     useEffect(() => {
-        initializeState();
+        initializeSongLists(setSongList, setShuffledList, shuffle);
 
         const handleStorageChange = () => {
-            initializeState();
+            initializeSongLists(setSongList, setShuffledList, shuffle);
         };
 
         window.addEventListener('storage', handleStorageChange);
@@ -53,16 +40,6 @@ export const usePlaylistActions = () => {
             window.removeEventListener('storage', handleStorageChange);
         };
     }, []);
-
-    const shuffle = (array: any[]) => {
-        let currentIndex = array.length;
-        while (currentIndex !== 0) {
-            let randomIndex = Math.floor(Math.random() * currentIndex);
-            currentIndex--;
-            [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-        }
-        return array;
-    };
 
     const playVideoAtIndex = (list: Video[], index: number) => {
         if (list.length > 0) {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
@@ -18,11 +18,10 @@ import {
     DrawerTrigger,
     DrawerContent,
     DrawerHeader,
-    DrawerFooter,
     DrawerTitle,
-    DrawerDescription,
     DrawerClose,
 } from '@/components/ui/drawer'; // Import drawer components
+import { initializeSongLists, shuffle } from '@/utils/playlistUtils'; // Import utilities
 
 interface Video {
     id: {
@@ -48,13 +47,12 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
     const [videoId, setVideoId] = useState('');
     const [songList, setSongList] = useState<Video[]>([]);
     const [shuffledList, setShuffledList] = useState<Video[]>([]);
-    const [isPlaying, setIsPlaying] = useState(false);
+    const [, setIsPlaying] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [openDrawerForVideoId, setOpenDrawerForVideoId] = useState<string | null>(null);
     const {
         handlePlayList,
         handlePlayShuffle,
-        shuffle,
         isShuffle,
         isDialogOpen,
         setIsDialogOpen,
@@ -64,17 +62,11 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
 
     const MAX_SONGS = 10;
 
-    useEffect(() => {
-        const storedSongs = localStorage.getItem('songList');
-        const storedShuffledList = localStorage.getItem('shuffledList');
+    const memoizedShuffle = useCallback(shuffle, []);
 
-        if (storedSongs) {
-            const parsedList = JSON.parse(storedSongs);
-            setSongList(parsedList);
-            const shuffledState = storedShuffledList ? JSON.parse(storedShuffledList) : shuffle([...parsedList]);
-            setShuffledList(shuffledState);
-        }
-    }, []);
+    useEffect(() => {
+        initializeSongLists(setSongList, setShuffledList, memoizedShuffle);
+    }, [memoizedShuffle]);
 
     const handleAddToList = (video: Video) => {
         if (songList.length < MAX_SONGS) {
@@ -123,8 +115,8 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
         setIsDialogOpen(true);
         setTimeout(() => {
             setIsDialogOpen(false);
-            setIsDrawerOpen(false); // Close the drawer as well
-        }, 500); // Close the dialog after 500ms
+            setOpenDrawerForVideoId(null); // Close the drawer as well
+        }, 1000);
     };
 
     return (
@@ -154,7 +146,7 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
                         <CardDescription>{video.snippet.description || 'No description available.'}</CardDescription>
                     </CardContent>
                     <CardFooter>
-                        <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+                        <Drawer open={openDrawerForVideoId === video.id.videoId} onOpenChange={(isOpen) => setOpenDrawerForVideoId(isOpen ? video.id.videoId : null)}>
                             <DrawerTrigger>
                                 <Button type="button" size="sm" className="w-full">
                                     Options
