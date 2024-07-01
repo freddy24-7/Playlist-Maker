@@ -21,9 +21,20 @@ const YouTubePlainPlayer = forwardRef<YouTubePlainPlayerRef, YouTubePlainPlayerP
     const [isMuted, setIsMuted] = useState(true); // New state to track mute status
 
     useEffect(() => {
+        const opts: YouTubeProps['opts'] = {
+            playerVars: {
+                autoplay: autoplay ? 1 : 0,
+                controls: 1,
+                rel: 0,
+                enablejsapi: 1,
+                modestbranding: 1,
+                mute: 1, // Start the video muted
+            },
+        };
+
         if (isReady && playerRef.current) {
             try {
-                playerRef.current.cueVideoById({ videoId: videoId });
+                playerRef.current.cueVideoById({ videoId });
                 if (autoplay) {
                     playerRef.current.playVideo();
                 }
