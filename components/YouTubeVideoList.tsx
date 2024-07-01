@@ -74,7 +74,7 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
             const shuffledState = storedShuffledList ? JSON.parse(storedShuffledList) : shuffle([...parsedList]);
             setShuffledList(shuffledState);
         }
-    }, []);
+    }, [shuffle]);
 
     const handleAddToList = (video: Video) => {
         if (songList.length < MAX_SONGS) {
@@ -124,7 +124,7 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
         setTimeout(() => {
             setIsDialogOpen(false);
             setIsDrawerOpen(false); // Close the drawer as well
-        }, 500); // Close the dialog after 500ms
+        }, 300); // Close the dialog after 300ms
     };
 
     return (
