@@ -23,7 +23,7 @@ const ClientPlayPage: React.FC = () => {
     const searchParams = useSearchParams();
     const [videos, setVideos] = useState<Video[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [autoplay, setAutoplay] = useState(false);
+    const [, setAutoplay] = useState(false);
 
     useEffect(() => {
         const videoId = searchParams.get('videoId') as string;
@@ -59,7 +59,7 @@ const ClientPlayPage: React.FC = () => {
                 <YouTubePlainPlayer
                     key={videos[currentIndex].id.videoId}
                     videoId={videos[currentIndex].id.videoId}
-                    autoplay={autoplay}
+                    autoplay={true}
                     onVideoEnd={onVideoEnd}
                 />
             )}
