@@ -18,9 +18,7 @@ import {
     DrawerTrigger,
     DrawerContent,
     DrawerHeader,
-    DrawerFooter,
     DrawerTitle,
-    DrawerDescription,
     DrawerClose,
 } from '@/components/ui/drawer'; // Import drawer components
 
@@ -48,7 +46,7 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
     const [videoId, setVideoId] = useState('');
     const [songList, setSongList] = useState<Video[]>([]);
     const [shuffledList, setShuffledList] = useState<Video[]>([]);
-    const [isPlaying, setIsPlaying] = useState(false);
+    const [, setIsPlaying] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const {
