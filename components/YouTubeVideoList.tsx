@@ -21,7 +21,7 @@ import {
     DrawerFooter,
     DrawerTitle,
     DrawerDescription,
-    DrawerClose
+    DrawerClose,
 } from '@/components/ui/drawer'; // Import drawer components
 
 interface Video {
@@ -48,11 +48,19 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
     const [videoId, setVideoId] = useState('');
     const [songList, setSongList] = useState<Video[]>([]);
     const [shuffledList, setShuffledList] = useState<Video[]>([]);
-    const [, setIsPlaying] = useState(false);
+    const [isPlaying, setIsPlaying] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [dialogMessage, setDialogMessage] = useState('');
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const { handlePlayList, handlePlayShuffle, shuffle, isShuffle } = usePlaylistActions();
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const {
+        handlePlayList,
+        handlePlayShuffle,
+        shuffle,
+        isShuffle,
+        isDialogOpen,
+        setIsDialogOpen,
+        dialogMessage,
+        setDialogMessage, // Ensure setDialogMessage is used correctly
+    } = usePlaylistActions();
 
     const MAX_SONGS = 10;
 
@@ -113,6 +121,10 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
     const showDialog = (message: string) => {
         setDialogMessage(message);
         setIsDialogOpen(true);
+        setTimeout(() => {
+            setIsDialogOpen(false);
+            setIsDrawerOpen(false); // Close the drawer as well
+        }, 500); // Close the dialog after 500ms
     };
 
     return (
@@ -142,10 +154,10 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
                         <CardDescription>{video.snippet.description || 'No description available.'}</CardDescription>
                     </CardContent>
                     <CardFooter>
-                        <Drawer>
+                        <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
                             <DrawerTrigger>
                                 <Button type="button" size="sm" className="w-full">
-                                    Open
+                                    Options
                                 </Button>
                             </DrawerTrigger>
                             <DrawerContent>

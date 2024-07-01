@@ -7,6 +7,14 @@ import { LightDarkToggle } from '@/components/ui/light-dark-toggle';
 import { CldImage } from 'next-cloudinary';
 import { usePlaylistActions } from '@/hooks/usePlaylistActions';
 import DisplayListModal from '@/components/DisplayListModal';
+import {
+    AlertDialog,
+    AlertDialogContent,
+    AlertDialogHeader,
+    AlertDialogFooter,
+    AlertDialogDescription,
+    AlertDialogAction,
+} from '@/components/ui/alert-dialog';
 
 interface MediaItem {
     id: {
@@ -23,7 +31,7 @@ export const Header = () => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [isDisplayListOpen, setIsDisplayListOpen] = useState(false); // State to manage display list modal visibility
     const [mediaList, setMediaList] = useState<MediaItem[]>([]); // State to store media list
-    const { handlePlayList, handlePlayShuffle } = usePlaylistActions();
+    const { handlePlayList, handlePlayShuffle, isDialogOpen, setIsDialogOpen, dialogMessage } = usePlaylistActions();
 
     useEffect(() => {
         const handleResize = () => {
@@ -117,6 +125,16 @@ export const Header = () => {
                 mediaList={mediaList}
                 onDelete={handleDeleteMedia}
             />
+            <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogDescription>{dialogMessage}</AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogAction onClick={() => setIsDialogOpen(false)}>OK</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </header>
     );
 };

@@ -23,6 +23,8 @@ export const usePlaylistActions = () => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [, setCurrentIndex] = useState(0);
     const [isShuffle, setIsShuffle] = useState(false);
+    const [isDialogOpen, setIsDialogOpen] = useState(false); // State for dialog
+    const [dialogMessage, setDialogMessage] = useState(''); // State for dialog message
 
     const initializeState = () => {
         const storedSongs = localStorage.getItem('songList');
@@ -76,6 +78,9 @@ export const usePlaylistActions = () => {
             setIsShuffle(false);
             localStorage.setItem('shuffleActive', 'false');
             playVideoAtIndex(songList, 0);
+        } else {
+            setDialogMessage('Playlist is empty');
+            setIsDialogOpen(true); // Show dialog if playlist is empty
         }
     };
 
@@ -88,6 +93,9 @@ export const usePlaylistActions = () => {
             setIsPlaying(true);
             setIsShuffle(true);
             playVideoAtIndex(shuffled, 0);
+        } else {
+            setDialogMessage('Playlist is empty');
+            setIsDialogOpen(true); // Show dialog if playlist is empty
         }
     };
 
@@ -96,5 +104,9 @@ export const usePlaylistActions = () => {
         handlePlayShuffle,
         shuffle,
         isShuffle,
+        isDialogOpen,
+        setIsDialogOpen,
+        dialogMessage,
+        setDialogMessage, // Ensure setDialogMessage is returned
     };
 };
