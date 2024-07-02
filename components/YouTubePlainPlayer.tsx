@@ -14,22 +14,9 @@ export interface YouTubePlainPlayerRef {
 }
 
 const YouTubePlainPlayer: React.ForwardRefRenderFunction<YouTubePlainPlayerRef, YouTubePlainPlayerProps> = (props, ref) => {
-    const { videoId, autoplay, onVideoEnd } = props;
+    const { videoId, autoplay, onVideoEnd, className } = props;
     const playerRef = useRef<YouTubePlayer | null>(null);
     const [isReady, setIsReady] = useState(false);
-
-    useEffect(() => {
-        if (isReady && playerRef.current) {
-            try {
-                playerRef.current.cueVideoById({ videoId });
-                if (autoplay) {
-                    playerRef.current.playVideo();
-                }
-            } catch (error) {
-                console.error("Error cueing or playing video:", error);
-            }
-        }
-    }, [videoId, autoplay, isReady]);
 
     useImperativeHandle(ref, () => ({
         playVideo: () => {
@@ -80,7 +67,7 @@ const YouTubePlainPlayer: React.ForwardRefRenderFunction<YouTubePlainPlayerRef, 
             onReady={onReady}
             onEnd={onEnd}
             onStateChange={onStateChange}
-            className={props.className}
+            className={className}
         />
     );
 };
