@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useRef, useState, useEffect } from 'react';
+import React, { useImperativeHandle, useRef, useState } from 'react';
 import YouTube, { YouTubePlayer, YouTubeProps } from 'react-youtube';
 
 interface YouTubePlainPlayerProps {
@@ -16,7 +16,7 @@ export interface YouTubePlainPlayerRef {
 const YouTubePlainPlayer: React.ForwardRefRenderFunction<YouTubePlainPlayerRef, YouTubePlainPlayerProps> = (props, ref) => {
     const { videoId, autoplay, onVideoEnd, className } = props;
     const playerRef = useRef<YouTubePlayer | null>(null);
-    const [isReady, setIsReady] = useState(false);
+    const [, setIsReady] = useState(false);
 
     useImperativeHandle(ref, () => ({
         playVideo: () => {
@@ -45,10 +45,6 @@ const YouTubePlainPlayer: React.ForwardRefRenderFunction<YouTubePlainPlayerRef, 
         }
     };
 
-    const onStateChange: YouTubeProps['onStateChange'] = (event) => {
-        // Handle state changes if necessary
-    };
-
     const opts: YouTubeProps['opts'] = {
         playerVars: {
             autoplay: autoplay ? 1 : 0,
@@ -56,7 +52,7 @@ const YouTubePlainPlayer: React.ForwardRefRenderFunction<YouTubePlainPlayerRef, 
             rel: 0,
             enablejsapi: 1,
             modestbranding: 1,
-            mute: 1, // Ensure video starts muted for autoplay
+            mute: 0, // 1 for mute
         },
     };
 
@@ -66,7 +62,6 @@ const YouTubePlainPlayer: React.ForwardRefRenderFunction<YouTubePlainPlayerRef, 
             opts={opts}
             onReady={onReady}
             onEnd={onEnd}
-            onStateChange={onStateChange}
             className={className}
         />
     );

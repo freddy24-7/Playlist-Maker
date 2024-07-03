@@ -20,7 +20,7 @@ import {
     DrawerHeader,
     DrawerTitle,
     DrawerClose,
-} from '@/components/ui/drawer'; // Import drawer components
+} from '@/components/ui/drawer';
 
 interface Video {
     id: {
@@ -57,7 +57,7 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
         isDialogOpen,
         setIsDialogOpen,
         dialogMessage,
-        setDialogMessage, // Ensure setDialogMessage is used correctly
+        setDialogMessage,
     } = usePlaylistActions();
 
     const MAX_SONGS = 10;
@@ -100,7 +100,7 @@ const YouTubeVideoList: React.FC<YouTubeVideoListProps> = ({ videos }) => {
 
     const handleClearList = () => {
         localStorage.removeItem('songList');
-        localStorage.removeItem('shuffledList'); // Clear shuffled list from localStorage
+        localStorage.removeItem('shuffledList');
         setSongList([]);
         setShuffledList([]);
         showDialog('Playlist cleared');
