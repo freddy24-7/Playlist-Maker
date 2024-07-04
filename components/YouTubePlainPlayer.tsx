@@ -52,7 +52,7 @@ const YouTubePlainPlayer: React.ForwardRefRenderFunction<YouTubePlainPlayerRef, 
             rel: 0,
             enablejsapi: 1,
             modestbranding: 1,
-            mute: 0, // 1 for mute
+            mute: 1, // 1 for mute
         },
     };
 
