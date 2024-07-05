@@ -15,6 +15,7 @@ import {
     AlertDialogDescription,
     AlertDialogAction,
 } from '@/components/ui/alert-dialog';
+import AboutDialogue from '@/components/ui/AboutDialogue'; // Import AboutDialog component
 
 interface MediaItem {
     id: {
@@ -32,6 +33,7 @@ export const Header = () => {
     const [isDisplayListOpen, setIsDisplayListOpen] = useState(false); // State to manage display list modal visibility
     const [mediaList, setMediaList] = useState<MediaItem[]>([]); // State to store media list
     const { handlePlayList, handlePlayShuffle, isDialogOpen, setIsDialogOpen, dialogMessage } = usePlaylistActions();
+    const [isAboutOpen, setIsAboutOpen] = useState(false); // State to manage the About modal visibility
 
     useEffect(() => {
         const handleResize = () => {
@@ -118,6 +120,9 @@ export const Header = () => {
                     </Button>
                 </div>
             )}
+            <div className="flex gap-2">
+                <AboutDialogue isOpen={isAboutOpen} onOpenChange={setIsAboutOpen} /> {/* Use AboutDialog component */}
+            </div>
             <LightDarkToggle className="fixed top-6 right-2" />
             <DisplayListModal
                 isOpen={isDisplayListOpen}

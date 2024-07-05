@@ -15,18 +15,18 @@ const YouTubeSearchForm: React.FC<YouTubeSearchFormProps> = ({ searchTerm, setSe
     };
 
     return (
-        <form onSubmit={handleSearch} className="flex flex-col space-y-4 w-full max-w-md">
-            <div className="flex mb-4">
+        <form onSubmit={handleSearch} className="flex flex-col md:flex-row space-y-4 md:space-y-0 w-full max-w-md">
+            <div className="flex flex-col md:flex-row w-full">
                 <input
                     type="text"
                     value={searchTerm}
                     onChange={handleInputChange}
                     placeholder="Search Artist/Song..."
-                    className="flex-grow p-4 text-lg border-2 border-blue-500 rounded-l-lg focus:outline-none focus:border-blue-700 text-black"
+                    className="flex-grow p-4 text-lg border-2 border-blue-500 rounded-t-lg md:rounded-l-lg md:rounded-tr-none md:rounded-br-none focus:outline-none focus:border-blue-700 text-black"
                 />
                 <Button
                     type="submit"
-                    className="ml-1.5"
+                    className="mt-2 md:mt-0 md:ml-1.5"
                 >
                     Search
                 </Button>
