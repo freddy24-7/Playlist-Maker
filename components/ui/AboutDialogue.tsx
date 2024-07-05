@@ -31,9 +31,8 @@ const AboutDialog: React.FC<AboutDialogProps> = ({ isOpen, onOpenChange }) => {
                     <p className="mb-3">Your playlist is stored only on your own device.</p>
                     <p className="mb-3">On iPhone or iPad unmute may be required between songs given iOS restrictions on
                         autoplay.</p>
-                    <p>You can move the list player around on touchscreens, put two fingers just above the player and
-                        shift its location</p>
-                    <p>Hold your phone horizontally for best experience</p>
+                    <p className="mb-3">You can move the list player around on touchscreens to shift its location.</p>
+                    <p>Hold your phone horizontally for best experience.</p>
                 </AlertDialogDescription>
                 <AlertDialogFooter>
                     <AlertDialogCancel>Close</AlertDialogCancel>
