@@ -1,5 +1,6 @@
 import React, { useImperativeHandle, useRef, useState, useEffect } from 'react';
 import YouTube, { YouTubePlayer, YouTubeProps } from 'react-youtube';
+import Draggable from 'react-draggable';
 
 interface YouTubePlainPlayerProps {
     videoId?: string;
@@ -76,13 +77,17 @@ const YouTubePlainPlayer: React.ForwardRefRenderFunction<YouTubePlainPlayerRef, 
     };
 
     return (
-        <YouTube
-            videoId={videoId}
-            opts={opts}
-            onReady={onReady}
-            onEnd={onEnd}
-            className={className}
-        />
+        <Draggable>
+            <div className="draggable-container">
+                <YouTube
+                    videoId={videoId}
+                    opts={opts}
+                    onReady={onReady}
+                    onEnd={onEnd}
+                    className={className}
+                />
+            </div>
+        </Draggable>
     );
 };
 
