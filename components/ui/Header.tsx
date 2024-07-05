@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { MonitorPlayIcon, HomeIcon } from 'lucide-react';
+import { MonitorPlayIcon, HomeIcon, MenuIcon, XIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { LightDarkToggle } from '@/components/ui/light-dark-toggle';
 import { CldImage } from 'next-cloudinary';
@@ -15,7 +15,7 @@ import {
     AlertDialogDescription,
     AlertDialogAction,
 } from '@/components/ui/alert-dialog';
-import AboutDialogue from '@/components/ui/AboutDialogue'; // Import AboutDialog component
+import AboutDialogue from '@/components/ui/AboutDialogue';
 
 interface MediaItem {
     id: {
@@ -34,6 +34,7 @@ export const Header = () => {
     const [mediaList, setMediaList] = useState<MediaItem[]>([]); // State to store media list
     const { handlePlayList, handlePlayShuffle, isDialogOpen, setIsDialogOpen, dialogMessage } = usePlaylistActions();
     const [isAboutOpen, setIsAboutOpen] = useState(false); // State to manage the About modal visibility
+    const [isMenuOpen, setIsMenuOpen] = useState(false); // State to manage hamburger menu visibility
 
     useEffect(() => {
         const handleResize = () => {
@@ -77,6 +78,11 @@ export const Header = () => {
         localStorage.setItem('songList', JSON.stringify(updatedMediaList));
     };
 
+    const handleMenuItemClick = (action: () => void) => {
+        action();
+        setIsMenuOpen(false);
+    };
+
     return (
         <header className="bg-primary text-white p-4 sticky top-0 z-50 shadow-md flex flex-col sm:flex-row justify-between items-center text-center sm:text-left">
             {isDesktopOrLaptop && (
@@ -98,31 +104,67 @@ export const Header = () => {
                 </div>
                 <h2 className="text-xs sm:text-base">Create your own playlist</h2>
             </div>
-            <Button
-                onClick={handleHomeClick}
-                className="mt-2 sm:mt-0 bg-transparent hover:bg-white hover:text-pink-700 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300 flex items-center"
-                aria-label="Home"
-                role="button"
-            >
-                <HomeIcon size={20} className="sm:size-50 mr-3" aria-hidden="true" />
-                <span className="sr-only">Home</span>
-            </Button>
-            {!isPlaying && (
-                <div className="flex gap-2">
-                    <Button onClick={() => startPlaying(handlePlayList)} className="bg-transparent hover:bg-white hover:text-pink-700 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300">
-                        Play List
+            <div className="sm:hidden">
+                <Button onClick={() => setIsMenuOpen(!isMenuOpen)} className="bg-transparent text-white">
+                    {isMenuOpen ? <XIcon size={20} /> : <MenuIcon size={20} />}
+                </Button>
+            </div>
+            {isMenuOpen && !isDesktopOrLaptop && (
+                <div className="flex flex-col items-center gap-2 mt-2 sm:mt-0">
+                    <Button
+                        onClick={() => handleMenuItemClick(handleHomeClick)}
+                        className="bg-transparent hover:bg-white hover:text-pink-700 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300 flex items-center"
+                        aria-label="Home"
+                        role="button"
+                    >
+                        <HomeIcon size={20} className="sm:size-50 mr-3" aria-hidden="true" />
+                        <span className="sr-only">Home</span>
                     </Button>
-                    <Button onClick={() => startPlaying(handlePlayShuffle)} className="bg-transparent hover:bg-white hover:text-pink-700 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300">
-                        Play Shuffle
-                    </Button>
-                    <Button onClick={handleDisplayList} className="bg-transparent hover:bg-white hover:text-pink-700 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300 mr-4">
-                        Display List
-                    </Button>
+                    {!isPlaying && (
+                        <>
+                            <Button onClick={() => handleMenuItemClick(() => startPlaying(handlePlayList))} className="bg-transparent hover:bg-white hover:text-pink-700 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300">
+                                Play List
+                            </Button>
+                            <Button onClick={() => handleMenuItemClick(() => startPlaying(handlePlayShuffle))} className="bg-transparent hover:bg-white hover:text-pink-700 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300">
+                                Play Shuffle
+                            </Button>
+                            <Button onClick={() => handleMenuItemClick(handleDisplayList)} className="bg-transparent hover:bg-white hover:text-pink-700 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300 mr-4">
+                                Display List
+                            </Button>
+                        </>
+                    )}
+                    <AboutDialogue isOpen={isAboutOpen} onOpenChange={setIsAboutOpen} />
                 </div>
             )}
-            <div className="flex gap-2">
-                <AboutDialogue isOpen={isAboutOpen} onOpenChange={setIsAboutOpen} /> {/* Use AboutDialog component */}
-            </div>
+            {isDesktopOrLaptop && (
+                <>
+                    <Button
+                        onClick={handleHomeClick}
+                        className="mt-2 sm:mt-0 bg-transparent hover:bg-white hover:text-pink-700 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300 flex items-center"
+                        aria-label="Home"
+                        role="button"
+                    >
+                        <HomeIcon size={20} className="sm:size-50 mr-3" aria-hidden="true" />
+                        <span className="sr-only">Home</span>
+                    </Button>
+                    {!isPlaying && (
+                        <div className="flex gap-2">
+                            <Button onClick={() => startPlaying(handlePlayList)} className="bg-transparent hover:bg-white hover:text-pink-700 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300">
+                                Play List
+                            </Button>
+                            <Button onClick={() => startPlaying(handlePlayShuffle)} className="bg-transparent hover:bg-white hover:text-pink-700 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300">
+                                Play Shuffle
+                            </Button>
+                            <Button onClick={handleDisplayList} className="bg-transparent hover:bg-white hover:text-pink-700 text-white font-bold py-2 px-3 sm:px-4 rounded transition-colors duration-300 mr-4">
+                                Display List
+                            </Button>
+                        </div>
+                    )}
+                    <div className="flex gap-2">
+                        <AboutDialogue isOpen={isAboutOpen} onOpenChange={setIsAboutOpen} /> {/* Use AboutDialog component */}
+                    </div>
+                </>
+            )}
             <LightDarkToggle className="fixed top-6 right-2" />
             <DisplayListModal
                 isOpen={isDisplayListOpen}
