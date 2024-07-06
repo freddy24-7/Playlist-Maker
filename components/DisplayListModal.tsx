@@ -37,7 +37,13 @@ const DisplayListModal: React.FC<DisplayListModalProps> = ({ isOpen, onClose, me
 
     const handleVideoEnd = () => {
         setPlayingVideoId(null);
-        onClose();
+    };
+
+    const handleCloseVideo = () => {
+        setPlayingVideoId(null);
+        if (playerRef.current) {
+            playerRef.current.pauseVideo();
+        }
     };
 
     return (
@@ -56,6 +62,12 @@ const DisplayListModal: React.FC<DisplayListModalProps> = ({ isOpen, onClose, me
                                 className="w-full"
                                 onVideoEnd={handleVideoEnd}
                             />
+                            <Button
+                                onClick={handleCloseVideo}
+                                className="bg-pink-700 hover:bg-pink-800 text-white font-bold py-2 px-4 rounded mt-4"
+                            >
+                                Close Video
+                            </Button>
                         </div>
                     ) : (
                         mediaList.length > 0 ? (
