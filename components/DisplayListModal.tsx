@@ -8,7 +8,7 @@ import {
     AlertDialogAction,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import YouTubePlainPlayer, { YouTubePlainPlayerRef } from './YouTubePlainPlayer'; // Adjust the import path as needed
+import YouTubePlainPlayer, { YouTubePlainPlayerRef } from './YouTubePlainPlayer';
 
 interface MediaItem {
     id: {
@@ -64,38 +64,40 @@ const DisplayListModal: React.FC<DisplayListModalProps> = ({ isOpen, onClose, me
                             />
                             <Button
                                 onClick={handleCloseVideo}
-                                className="bg-pink-700 hover:bg-pink-800 text-white font-bold py-2 px-4 rounded mt-4"
+                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4"
                             >
                                 Close Video
                             </Button>
                         </div>
                     ) : (
-                        mediaList.length > 0 ? (
-                            mediaList.map((media, index) => (
-                                <div key={index} className="border-b border-gray-200 pb-2 flex justify-between items-center">
-                                    <div>
-                                        <p className="font-medium">{media.snippet.title}</p>
-                                        <p className="text-sm text-gray-500">{media.snippet.description}</p>
+                        <div className="max-h-64 overflow-y-auto">
+                            {mediaList.length > 0 ? (
+                                mediaList.map((media, index) => (
+                                    <div key={index} className="border-b border-gray-200 pb-2 flex justify-between items-center">
+                                        <div>
+                                            <p className="font-medium">{media.snippet.title}</p>
+                                            <p className="text-sm text-gray-500">{media.snippet.description}</p>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <Button
+                                                onClick={() => handlePlay(media.id.videoId)}
+                                                className="bg-pink-700 hover:bg-pink-800 text-white font-bold py-1 px-2 rounded"
+                                            >
+                                                Play
+                                            </Button>
+                                            <Button
+                                                onClick={() => onDelete(index)}
+                                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
+                                            >
+                                                Delete
+                                            </Button>
+                                        </div>
                                     </div>
-                                    <div className="flex items-center space-x-2">
-                                        <Button
-                                            onClick={() => handlePlay(media.id.videoId)}
-                                            className="bg-pink-700 hover:bg-pink-800 text-white font-bold py-1 px-2 rounded"
-                                        >
-                                            Play
-                                        </Button>
-                                        <Button
-                                            onClick={() => onDelete(index)}
-                                            className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
-                                        >
-                                            Delete
-                                        </Button>
-                                    </div>
-                                </div>
-                            ))
-                        ) : (
-                            <p>No media files found.</p>
-                        )
+                                ))
+                            ) : (
+                                <p>No media files found.</p>
+                            )}
+                        </div>
                     )}
                 </div>
                 {!playingVideoId && (
