@@ -8,7 +8,7 @@ import {
     AlertDialogAction,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import YouTubePlainPlayer, { YouTubePlainPlayerRef } from './YouTubePlainPlayer';
+import YouTubePlainPlayer, { YouTubePlainPlayerRef } from './YouTubePlainPlayer'; // Adjust the import path as needed
 
 interface MediaItem {
     id: {
@@ -70,7 +70,7 @@ const DisplayListModal: React.FC<DisplayListModalProps> = ({ isOpen, onClose, me
                             </Button>
                         </div>
                     ) : (
-                        <div className="max-h-64 overflow-y-auto">
+                        <div className="max-h-64 overflow-y-auto pr-4"> {/* Added padding-right here */}
                             {mediaList.length > 0 ? (
                                 mediaList.map((media, index) => (
                                     <div key={index} className="border-b border-gray-200 pb-2 flex justify-between items-center">
